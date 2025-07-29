@@ -1,0 +1,45 @@
+{
+  "metrics": [
+    {"label": "Revenue", "value": 124500, "icon": "DollarSign", "change": 5.2, "unit": "$"},
+    {"label": "Users", "value": 3200, "icon": "Users", "change": 2.1, "unit": ""},
+    {"label": "Conversion Rate", "value": 8.7, "icon": "TrendingUp", "change": 0.9, "unit": "%"},
+    {"label": "Growth %", "value": 12.3, "icon": "BarChart2", "change": 1.5, "unit": "%"}
+  ],
+  "revenueData": [
+    {"month": "Jan", "revenue": 85000, "users": 2800},
+    {"month": "Feb", "revenue": 92000, "users": 2950},
+    {"month": "Mar", "revenue": 78000, "users": 2700},
+    {"month": "Apr", "revenue": 98000, "users": 3100},
+    {"month": "May", "revenue": 105000, "users": 3250},
+    {"month": "Jun", "revenue": 124500, "users": 3200}
+  ],
+  "channelData": [
+    {"channel": "Organic Search", "users": 1280, "conversions": 112},
+    {"channel": "Social Media", "users": 960, "conversions": 85},
+    {"channel": "Email Marketing", "users": 640, "conversions": 78},
+    {"channel": "Paid Ads", "users": 320, "conversions": 45}
+  ],
+  "userRoles": [
+    {"role": "Admin", "count": 45, "percentage": 1.4},
+    {"role": "Manager", "count": 128, "percentage": 4.0},
+    {"role": "User", "count": 2847, "percentage": 89.0},
+    {"role": "Guest", "count": 180, "percentage": 5.6}
+  ],
+  "tableData": [
+    {"id": 1, "name": "John Doe", "email": "john@example.com", "role": "Admin", "status": "Active", "lastLogin": "2024-01-15", "revenue": 15420},
+    {"id": 2, "name": "Jane Smith", "email": "jane@example.com", "role": "Manager", "status": "Active", "lastLogin": "2024-01-14", "revenue": 12350},
+    {"id": 3, "name": "Bob Johnson", "email": "bob@example.com", "role": "User", "status": "Inactive", "lastLogin": "2024-01-10", "revenue": 8750},
+    {"id": 4, "name": "Alice Brown", "email": "alice@example.com", "role": "User", "status": "Active", "lastLogin": "2024-01-15", "revenue": 9820},
+    {"id": 5, "name": "Charlie Wilson", "email": "charlie@example.com", "role": "Manager", "status": "Active", "lastLogin": "2024-01-13", "revenue": 11200},
+    {"id": 6, "name": "Diana Davis", "email": "diana@example.com", "role": "User", "status": "Active", "lastLogin": "2024-01-15", "revenue": 7650},
+    {"id": 7, "name": "Eva Martinez", "email": "eva@example.com", "role": "Admin", "status": "Active", "lastLogin": "2024-01-14", "revenue": 18900},
+    {"id": 8, "name": "Frank Garcia", "email": "frank@example.com", "role": "User", "status": "Inactive", "lastLogin": "2024-01-08", "revenue": 5430},
+    {"id": 9, "name": "Grace Lee", "email": "grace@example.com", "role": "Manager", "status": "Active", "lastLogin": "2024-01-15", "revenue": 13750},
+    {"id": 10, "name": "Henry Taylor", "email": "henry@example.com", "role": "User", "status": "Active", "lastLogin": "2024-01-12", "revenue": 6890},
+    {"id": 11, "name": "Ivy Chen", "email": "ivy@example.com", "role": "User", "status": "Active", "lastLogin": "2024-01-15", "revenue": 8920},
+    {"id": 12, "name": "Jack Anderson", "email": "jack@example.com", "role": "Guest", "status": "Active", "lastLogin": "2024-01-11", "revenue": 2340},
+    {"id": 13, "name": "Kate Miller", "email": "kate@example.com", "role": "Manager", "status": "Active", "lastLogin": "2024-01-14", "revenue": 14560},
+    {"id": 14, "name": "Leo Rodriguez", "email": "leo@example.com", "role": "User", "status": "Active", "lastLogin": "2024-01-13", "revenue": 7890},
+    {"id": 15, "name": "Mia Thompson", "email": "mia@example.com", "role": "User", "status": "Inactive", "lastLogin": "2024-01-09", "revenue": 4320}
+  ]
+}
