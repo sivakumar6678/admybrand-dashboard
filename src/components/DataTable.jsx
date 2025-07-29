@@ -10,7 +10,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Select } from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -184,28 +184,30 @@ export default function DataTable({ data, loading = false }) {
             
             <div className="flex flex-wrap gap-3">
               <div className="relative">
-                <Select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="h-12 min-w-[120px] bg-background/50 border-2 focus:border-primary/50"
-                >
-                  <option value="all">All Status</option>
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="h-12 min-w-[120px] bg-background/50 border-2 focus:border-primary/50">
+                    <SelectValue placeholder="All Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">Inactive</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
               
               <div className="relative">
-                <Select
-                  value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
-                  className="h-12 min-w-[120px] bg-background/50 border-2 focus:border-primary/50"
-                >
-                  <option value="all">All Roles</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Manager">Manager</option>
-                  <option value="User">User</option>
-                  <option value="Guest">Guest</option>
+                <Select value={roleFilter} onValueChange={setRoleFilter}>
+                  <SelectTrigger className="h-12 min-w-[120px] bg-background/50 border-2 focus:border-primary/50">
+                    <SelectValue placeholder="All Roles" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="Admin">Admin</SelectItem>
+                    <SelectItem value="Manager">Manager</SelectItem>
+                    <SelectItem value="User">User</SelectItem>
+                    <SelectItem value="Guest">Guest</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
               
@@ -348,18 +350,22 @@ export default function DataTable({ data, loading = false }) {
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4">
               <p className="text-sm font-semibold text-foreground">Rows per page</p>
-              <Select
-                value={itemsPerPage.toString()}
-                onChange={(e) => {
-                  setItemsPerPage(Number(e.target.value));
+              <Select 
+                value={itemsPerPage.toString()} 
+                onValueChange={(value) => {
+                  setItemsPerPage(Number(value));
                   setCurrentPage(1);
                 }}
-                className="h-10 bg-background/50 border-2 focus:border-primary/50"
               >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
+                <SelectTrigger className="h-10 bg-background/50 border-2 focus:border-primary/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                </SelectContent>
               </Select>
               <div className="text-sm text-muted-foreground">
                 Showing <span className="font-semibold text-foreground">{((currentPage - 1) * itemsPerPage) + 1}</span> to{' '}

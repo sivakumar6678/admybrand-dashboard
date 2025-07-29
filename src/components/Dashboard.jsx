@@ -4,7 +4,7 @@ import RevenueLineChart from "./LineChart";
 import ChannelBarChart from "./BarChart";
 import UserRoleDonutChart from "./DonutChart";
 import DataTable from "./DataTable";
-import DarkModeToggle from "./DarkModeToggle";
+import { DarkModeToggle } from "./DarkModeToggle";
 import { 
   DollarSign, 
   Users, 

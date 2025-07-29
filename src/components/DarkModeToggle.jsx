@@ -1,48 +1,67 @@
 import React, { useContext } from "react";
+import { motion } from "framer-motion";
 import { ThemeContext } from "../context/ThemeContext";
 import { Button } from "./ui/button";
-import { Sun, Moon, Stars } from "lucide-react";
+import { Sun, Moon, Stars, Monitor } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
-export default function DarkModeToggle() {
-  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+export function DarkModeToggle() {
+  const { darkMode, theme, setTheme } = useContext(ThemeContext);
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return <Sun className="h-4 w-4" />
+      case 'dark':
+        return <Moon className="h-4 w-4" />
+      default:
+        return <Monitor className="h-4 w-4" />
+    }
+  }
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleDarkMode}
-      aria-label="Toggle Dark Mode"
-      className="relative overflow-hidden group hover:shadow-glow transition-all duration-500 border-2"
-    >
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label="Toggle theme"
+          className="relative overflow-hidden group hover:shadow-glow transition-all duration-500"
+        >
+          <motion.div
+            key={theme}
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.3, type: "spring" }}
+            className="relative z-10"
+          >
+            {getThemeIcon()}
+          </motion.div>
+          
+          {/* Animated background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </Button>
+      </DropdownMenuTrigger>
       
-      {/* Rotating background effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent rotate-45 scale-150 opacity-0 group-hover:opacity-100 transition-all duration-700 group-hover:rotate-90" />
-      
-      {/* Icon container */}
-      <div className="relative z-10 flex items-center justify-center">
-        {darkMode ? (
-          <div className="relative">
-            <Sun className="h-5 w-5 text-amber-500 transition-all duration-300 group-hover:rotate-180 group-hover:scale-110" />
-            <div className="absolute inset-0 animate-ping">
-              <Sun className="h-5 w-5 text-amber-500/30" />
-            </div>
-          </div>
-        ) : (
-          <div className="relative">
-            <Moon className="h-5 w-5 text-blue-500 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
-            <Stars className="absolute -top-1 -right-1 h-2 w-2 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-        )}
-      </div>
-      
-      {/* Glow effect */}
-      <div className={`absolute inset-0 rounded-lg transition-all duration-300 ${
-        darkMode 
-          ? 'shadow-[0_0_20px_rgba(245,158,11,0.3)] opacity-0 group-hover:opacity-100' 
-          : 'shadow-[0_0_20px_rgba(59,130,246,0.3)] opacity-0 group-hover:opacity-100'
-      }`} />
-    </Button>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('system')}>
+          <Monitor className="mr-2 h-4 w-4" />
+          <span>System</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
