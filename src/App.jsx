@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from './context/ThemeContext';
-import { EnhancedDashboard } from './components/EnhancedDashboard';
-import { Toaster } from './components/shared/Toaster';
+import Dashboard from './components/Dashboard';
+import { Toaster } from './components/ui/toast';
 import './index.css';
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         
         {/* Main Content */}
         <div className="relative z-10">
-          <EnhancedDashboard />
+          <Dashboard />
         </div>
         
         {/* Toast Notifications */}

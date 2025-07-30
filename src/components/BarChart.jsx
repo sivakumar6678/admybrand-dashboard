@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
@@ -18,35 +19,18 @@ export default function ChannelBarChart({ data, loading = false }) {
   }
 
   return (
-    <Card className="border-0 shadow-none bg-transparent">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-xl font-bold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
-              User Acquisition by Channel
-            </CardTitle>
-            <CardDescription className="text-muted-foreground mt-1">
-              Users and conversions by marketing channel
-            </CardDescription>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-pink-500 to-rose-500" />
-              <span className="text-xs font-medium text-muted-foreground">Users</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
-              <span className="text-xs font-medium text-muted-foreground">Conversions</span>
-            </div>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="relative">
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-primary/5 rounded-lg" />
-          
-          <ResponsiveContainer width="100%" height={350}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>Channel Performance</CardTitle>
+          <CardDescription>User acquisition by marketing channel</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
               <defs>
                 <linearGradient id="usersBarGradient" x1="0" y1="0" x2="0" y2="1">
@@ -124,8 +108,8 @@ export default function ChannelBarChart({ data, loading = false }) {
               />
             </BarChart>
           </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

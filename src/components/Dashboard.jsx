@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import MetricCard from "./MetricCard";
 import RevenueLineChart from "./LineChart";
 import ChannelBarChart from "./BarChart";
@@ -11,10 +12,13 @@ import {
   TrendingUp, 
   BarChart2,
   RefreshCw,
-  Activity
+  Activity,
+  Wifi,
+  WifiOff
 } from "lucide-react";
 import { Button } from "./ui/button";
 import mockData from "../mock/metrics.json";
+import { useRealTimeUpdates } from "../hooks/useRealTimeUpdates";
 
 const iconMap = {
   DollarSign,
@@ -27,34 +31,28 @@ export default function Dashboard() {
   const [data, setData] = useState(mockData);
   const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(new Date());
+  
+  // Use real-time updates hook
+  const { 
+    data: realtimeData, 
+    isUpdating, 
+    lastUpdated: realtimeLastUpdated, 
+    manualUpdate 
+  } = useRealTimeUpdates(mockData);
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setData(prevData => ({
-        ...prevData,
-        metrics: prevData.metrics.map(metric => ({
-          ...metric,
-          value: metric.label === "Revenue" 
-            ? metric.value + Math.floor(Math.random() * 1000) - 500
-            : metric.label === "Users"
-            ? metric.value + Math.floor(Math.random() * 20) - 10
-            : metric.value + (Math.random() * 2 - 1),
-          change: metric.change + (Math.random() * 1 - 0.5)
-        }))
-      }));
-      setLastUpdated(new Date());
-    }, 30000); // Update every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  // Merge real-time data with base data
+  const mergedData = {
+    ...data,
+    metrics: realtimeData.metrics || data.metrics
+  };
 
   const handleRefresh = async () => {
     setLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Simulate new data
+    // Trigger manual update and refresh data
+    manualUpdate();
     setData(prevData => ({
       ...prevData,
       metrics: prevData.metrics.map(metric => ({
@@ -82,54 +80,53 @@ export default function Dashboard() {
       </div>
 
       {/* Header */}
-      <header className="relative border-b bg-card/80 backdrop-blur-xl shadow-lg">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5" />
-        <div className="container mx-auto px-4 py-6 relative">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg animate-pulse" />
-                  <Activity className="relative h-10 w-10 text-primary animate-pulse" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-black bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-                    Analytics Dashboard
-                  </h1>
-                  <p className="text-sm text-muted-foreground font-medium">
-                    Real-time business intelligence
-                  </p>
-                </div>
-              </div>
-              <div className="hidden lg:flex items-center space-x-4">
-                <div className="flex items-center space-x-2 px-3 py-1 bg-muted/50 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Live
-                  </span>
-                </div>
-                <div className="text-sm text-muted-foreground font-mono">
-                  {lastUpdated.toLocaleTimeString()}
-                </div>
-              </div>
+      <motion.header 
+        className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
+              <p className="text-muted-foreground">
+                Monitor your business metrics and performance
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleRefresh}
-                disabled={loading}
-                className="relative overflow-hidden group hover:shadow-glow transition-all duration-300"
+            
+            <div className="flex items-center gap-3">
+              {/* Real-time status indicator */}
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                {isUpdating ? (
+                  <WifiOff className="h-3 w-3 animate-pulse" />
+                ) : (
+                  <Wifi className="h-3 w-3 text-green-500" />
+                )}
+                <span>
+                  {isUpdating ? 'Updating...' : `Updated ${realtimeLastUpdated.toLocaleTimeString()}`}
+                </span>
+              </div>
+              
+              <Button
+                onClick={() => {
+                  handleRefresh()
+                  manualUpdate()
+                }}
+                variant="outline"
+                size="sm"
+                disabled={loading || isUpdating}
+                className="flex items-center gap-2"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <RefreshCw className={`relative mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                <span className="relative">Refresh</span>
+                <RefreshCw className={`h-4 w-4 ${(loading || isUpdating) ? 'animate-spin' : ''}`} />
+                Refresh
               </Button>
+              
               <DarkModeToggle />
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       <main className="relative container mx-auto px-4 py-12">
         {/* Section Title */}
@@ -143,126 +140,72 @@ export default function Dashboard() {
         </div>
 
         {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {data.metrics.map((metric, index) => {
-            const IconComponent = iconMap[metric.icon];
-            return (
-              <div key={index} className="float" style={{ animationDelay: `${index * 0.2}s` }}>
+        <motion.section 
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {mergedData.metrics.map((metric, index) => {
+              const IconComponent = iconMap[metric.icon];
+              return (
                 <MetricCard
+                  key={metric.label}
                   title={metric.label}
                   value={metric.value}
+                  previousValue={metric.value - 100} // Simulate previous value for animation
                   icon={<IconComponent className="h-6 w-6" />}
                   growth={metric.change}
                   unit={metric.unit}
+                  isLoading={loading || isUpdating}
+                  trend={metric.change >= 0 ? 'positive' : 'negative'}
+                  priority={metric.label === 'Revenue' ? 'high' : 'normal'}
                 />
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </motion.section>
 
         {/* Charts Section */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-foreground mb-2">Analytics Insights</h3>
-            <p className="text-muted-foreground">Detailed performance metrics and trends</p>
+        <motion.section 
+          className="mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <RevenueLineChart 
+              data={mergedData.revenueData} 
+              loading={loading}
+            />
+            <ChannelBarChart 
+              data={mergedData.channelData} 
+              loading={loading}
+            />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg hover:shadow-heavy transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-                <div className="relative">
-                  <RevenueLineChart data={data.revenueData} loading={loading} />
-                </div>
-              </div>
-            </div>
-            <div className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg hover:shadow-heavy transition-all duration-500">
-                <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-primary/5" />
-                <div className="relative">
-                  <ChannelBarChart data={data.channelData} loading={loading} />
-                </div>
-              </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <UserRoleDonutChart 
+                data={mergedData.userRoles} 
+                loading={loading}
+              />
             </div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Secondary Metrics Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          <div className="lg:col-span-1">
-            <div className="relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg hover:shadow-heavy transition-all duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5" />
-              <div className="relative">
-                <UserRoleDonutChart data={data.userRoles} loading={loading} />
-              </div>
-            </div>
-          </div>
-          <div className="lg:col-span-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-full">
-              {/* Enhanced mini metric cards */}
-              <div className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg hover:shadow-heavy transition-all duration-500 p-8">
-                <div className="absolute inset-0 gradient-success opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                      Avg. Session Duration
-                    </h3>
-                    <div className="p-2 rounded-lg gradient-success">
-                      <Activity className="h-4 w-4 text-white" />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-black bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent mb-2">
-                    4m 32s
-                  </p>
-                  <div className="flex items-center text-sm">
-                    <TrendingUp className="mr-1 h-4 w-4 text-emerald-500" />
-                    <span className="text-emerald-500 font-medium">+12% from last week</span>
-                  </div>
-                  <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full gradient-success rounded-full w-3/4 transition-all duration-1000" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg hover:shadow-heavy transition-all duration-500 p-8">
-                <div className="absolute inset-0 gradient-secondary opacity-5 group-hover:opacity-10 transition-opacity duration-500" />
-                <div className="relative">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                      Bounce Rate
-                    </h3>
-                    <div className="p-2 rounded-lg gradient-secondary">
-                      <BarChart2 className="h-4 w-4 text-white" />
-                    </div>
-                  </div>
-                  <p className="text-3xl font-black bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent mb-2">
-                    34.2%
-                  </p>
-                  <div className="flex items-center text-sm">
-                    <TrendingUp className="mr-1 h-4 w-4 text-red-500" />
-                    <span className="text-red-500 font-medium">+2.1% from last week</span>
-                  </div>
-                  <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full gradient-secondary rounded-full w-1/3 transition-all duration-1000" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Data Table Section */}
-        <div className="mb-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-foreground mb-2">User Analytics</h3>
-            <p className="text-muted-foreground">Comprehensive user data and insights</p>
-          </div>
-          <div className="relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm border shadow-lg">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3" />
-            <div className="relative">
-              <DataTable data={data.tableData} loading={loading} />
-            </div>
-          </div>
-        </div>
+        {/* Data Table */}
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <DataTable 
+            data={mergedData.tableData} 
+            loading={loading}
+          />
+        </motion.section>
       </main>
     </div>
   );

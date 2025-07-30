@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
@@ -63,23 +64,18 @@ export default function UserRoleDonutChart({ data, loading = false }) {
   };
 
   return (
-    <Card className="border-0 shadow-none bg-transparent">
-      <CardHeader className="pb-4">
-        <div className="text-center">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            User Distribution by Role
-          </CardTitle>
-          <CardDescription className="text-muted-foreground mt-1">
-            Breakdown of users by their roles
-          </CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="relative">
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 rounded-lg" />
-          
-          <ResponsiveContainer width="100%" height={350}>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>User Roles</CardTitle>
+          <CardDescription>Distribution by user role</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <defs>
                 {GRADIENTS.map((gradient, index) => (
@@ -143,8 +139,8 @@ export default function UserRoleDonutChart({ data, loading = false }) {
               <Legend content={<CustomLegend />} />
             </PieChart>
           </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
