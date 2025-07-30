@@ -21,24 +21,7 @@ export const useRealTimeUpdates = (initialData, updateInterval = 30000) => {
           ...metric,
           value: generateRandomUpdate(metric.value, 0.05),
           change: (Math.random() * 10 - 5).toFixed(1)
-        })),
-        // Add new activity
-        activityTimeline: [
-          {
-            id: Date.now(),
-            type: ['signup', 'purchase', 'login', 'upgrade'][Math.floor(Math.random() * 4)],
-            user: ['Alex Johnson', 'Sarah Wilson', 'Mike Chen', 'Emma Davis'][Math.floor(Math.random() * 4)],
-            description: [
-              'New user registered',
-              'Completed purchase',
-              'User logged in',
-              'Upgraded to Pro plan'
-            ][Math.floor(Math.random() * 4)],
-            timestamp: new Date().toISOString(),
-            avatar: ['AJ', 'SW', 'MC', 'ED'][Math.floor(Math.random() * 4)]
-          },
-          ...prevData.activityTimeline.slice(0, 4)
-        ]
+        }))
       }))
       
       setIsUpdating(false)

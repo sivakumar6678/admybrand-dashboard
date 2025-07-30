@@ -1,53 +1,77 @@
-# Modern AI-Powered Analytics Dashboard
+# 🧠 ADmyBRAND Insights - AI-Powered Analytics Dashboard
 
-A highly responsive, modern analytics dashboard built with **React.js** and **shadcn/ui**. Features real-time data updates, interactive charts, advanced data tables, and a beautiful dark/light mode toggle.
+A cutting-edge, interactive analytics dashboard built with **React 19**, **Vite**, and **shadcn/ui**. Features AI-powered insights, draggable grid layout, advanced date filtering, real-time updates, and a beautiful dark/light mode toggle.
 
-## 🚀 Features
+## 🚀 Advanced Features
 
-### 📊 Overview Dashboard
-- **4 Summary Metric Cards**: Revenue, Users, Conversion Rate, Growth %
-- **Real-time Updates**: Simulated live data updates every 30 seconds
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
+### 🎛️ Interactive Grid Layout
+- **Drag & Drop**: Rearrange dashboard widgets by dragging
+- **Resizable Widgets**: Adjust component sizes with resize handles
+- **Layout Persistence**: Your customizations save automatically
+- **Responsive Breakpoints**: Adapts to all screen sizes (12→10→6→4→2 columns)
 
-### 📈 Interactive Charts
-- **Line Chart**: Revenue and user growth over time
-- **Bar Chart**: User acquisition by marketing channel
-- **Donut Chart**: User distribution by role
-- **Responsive Charts**: Built with Recharts library
+### 📅 Smart Date Filtering
+- **Global Filtering**: One date range affects all dashboard data
+- **Quick Presets**: Last 7/30/90 Days, This/Last Month
+- **Custom Ranges**: Select any start and end date
+- **Real-time Updates**: All charts and data update instantly
 
-### 📋 Advanced Data Table
-- **Sorting**: Click column headers to sort data
-- **Filtering**: Search by name, filter by status and role
+### 🧠 AI-Powered Insights
+- **Smart Analysis**: Click "🧠 Generate Insights" for AI analysis
+- **Dynamic Content**: Insights generated from your actual data
+- **Professional Formatting**: Color-coded sections with emojis
+- **Actionable Recommendations**: Specific next steps for growth
+
+### 📊 Core Dashboard
+- **4 KPI Cards**: Revenue, Users, Conversion Rate, Growth %
+- **Real-time Updates**: Live data simulation every 30 seconds
+- **Interactive Charts**: Line, Bar, and Donut charts with Recharts
+- **Advanced Data Table**: Sorting, filtering, and search
 - **Pagination**: Configurable items per page (5, 10, 20, 50)
 - **Export**: PDF and CSV export functionality
 - **Loading States**: Beautiful skeleton loading animations
 
 ### 🎨 UI/UX Design
-- **shadcn/ui Components**: Consistent, accessible design system
-- **Dark/Light Mode**: Toggle between themes with smooth transitions
-- **Smooth Animations**: Hover effects and loading states
-- **Visual Hierarchy**: Clean layout with proper spacing and typography
-- **Mobile Responsive**: Works perfectly on all screen sizes
+- **Modern Design System**: Consistent, accessible component library
+- **Dark/Light Mode**: Seamless theme switching with animations
+- **Smooth Interactions**: 60fps animations and hover effects
+- **Professional Aesthetics**: Clean layout with proper spacing
+- **Mobile-First**: Responsive design for all devices
 
-## 📁 Project Structure
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+Visit: `http://localhost:5173`
+
+## 📁 Clean Project Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/                    # shadcn/ui base components
+│   ├── advanced/              # Advanced feature components
+│   │   ├── date-range-picker.jsx
+│   │   └── smart-insights-modal.jsx
+│   ├── ui/                    # Reusable UI components
 │   │   ├── button.jsx
 │   │   ├── card.jsx
-│   │   ├── table.jsx
-│   │   ├── input.jsx
-│   │   ├── select.jsx
-│   │   └── skeleton.jsx
-│   ├── Dashboard.jsx          # Main dashboard layout
-│   ├── MetricCard.jsx         # Summary metric cards
-│   ├── LineChart.jsx          # Revenue line chart
-│   ├── BarChart.jsx           # Channel bar chart
-│   ├── DonutChart.jsx         # User role donut chart
+│   │   ├── dialog.jsx
+│   │   └── table.jsx
+│   ├── MetricCard.jsx         # KPI metric cards
+│   ├── LineChart.jsx          # Revenue trends
+│   ├── BarChart.jsx           # Channel performance
+│   ├── DonutChart.jsx         # User distribution
 │   ├── DataTable.jsx          # Advanced data table
-│   └── DarkModeToggle.jsx     # Theme toggle button
+│   └── DarkModeToggle.jsx     # Theme switcher
 ├── context/
 │   └── ThemeContext.jsx       # Dark/light mode context
 ├── mock/
