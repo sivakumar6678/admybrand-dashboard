@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import { motion } from 'framer-motion';
-import { ThemeProvider } from './context/ThemeContext';
+import { useState, useEffect, useContext } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeProvider, ThemeContext } from './context/ThemeContext';
 import { Toaster } from './components/ui/toast';
 import { TooltipProvider } from './components/ui/tooltip';
 import { Button } from './components/ui/button';
@@ -31,8 +30,7 @@ import {
   RefreshCw,
   Brain,
   Wifi,
-  WifiOff,
-  GripVertical
+  WifiOff
 } from 'lucide-react';
 
 import mockData from './mock/metrics.json';
@@ -40,7 +38,7 @@ import { useRealTimeUpdates } from './hooks/useRealTimeUpdates';
 import { generateFilteredMockData, getDefaultDateRange } from './utils/dateFilter';
 import './index.css';
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
+// Removed ResponsiveGridLayout - using CSS Grid instead
 
 const iconMap = {
   DollarSign,
@@ -49,125 +47,17 @@ const iconMap = {
   BarChart2
 };
 
-// Responsive layout configurations
-const getDefaultLayouts = () => ({
-  lg: [
-    // Smart Summary Panel at the top
-    { i: 'smart-summary', x: 0, y: 0, w: 12, h: 3, minW: 8, minH: 2 },
+// Legacy layout configurations removed - using CSS Grid instead
 
-    // Metric Cards
-    { i: 'metric-0', x: 0, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 3, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 6, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 9, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-
-    // AI Alert System
-    { i: 'ai-alerts', x: 0, y: 5, w: 12, h: 2, minW: 8, minH: 1 },
-
-    // Charts
-    { i: 'revenue-chart', x: 0, y: 7, w: 6, h: 4, minW: 4, minH: 3 },
-    { i: 'channel-chart', x: 6, y: 7, w: 6, h: 4, minW: 4, minH: 3 },
-
-    // AI Components
-    { i: 'ai-insights', x: 0, y: 11, w: 4, h: 6, minW: 3, minH: 4 },
-    { i: 'natural-language', x: 4, y: 11, w: 4, h: 6, minW: 3, minH: 4 },
-    { i: 'donut-chart', x: 8, y: 11, w: 4, h: 4, minW: 3, minH: 3 },
-
-    // Data Table
-    { i: 'data-table', x: 0, y: 17, w: 12, h: 4, minW: 8, minH: 3 }
-  ],
-  md: [
-    // Smart Summary Panel
-    { i: 'smart-summary', x: 0, y: 0, w: 10, h: 3, minW: 6, minH: 2 },
-
-    // Metric Cards - 2x2 layout
-    { i: 'metric-0', x: 0, y: 3, w: 5, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 5, y: 3, w: 5, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 5, w: 5, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 5, y: 5, w: 5, h: 2, minW: 2, minH: 2 },
-
-    // AI Alert System
-    { i: 'ai-alerts', x: 0, y: 7, w: 10, h: 2, minW: 6, minH: 1 },
-
-    // Charts - stacked
-    { i: 'revenue-chart', x: 0, y: 9, w: 10, h: 4, minW: 6, minH: 3 },
-    { i: 'channel-chart', x: 0, y: 13, w: 10, h: 4, minW: 6, minH: 3 },
-
-    // AI Components - 2 column layout
-    { i: 'ai-insights', x: 0, y: 17, w: 5, h: 6, minW: 3, minH: 4 },
-    { i: 'natural-language', x: 5, y: 17, w: 5, h: 6, minW: 3, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 23, w: 10, h: 4, minW: 6, minH: 3 },
-
-    // Data Table
-    { i: 'data-table', x: 0, y: 27, w: 10, h: 4, minW: 6, minH: 3 }
-  ],
-  sm: [
-    // Smart Summary Panel
-    { i: 'smart-summary', x: 0, y: 0, w: 6, h: 3, minW: 4, minH: 2 },
-
-    // Metric Cards - 2 column layout
-    { i: 'metric-0', x: 0, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 3, y: 3, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 5, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 3, y: 5, w: 3, h: 2, minW: 2, minH: 2 },
-
-    // AI Alert System
-    { i: 'ai-alerts', x: 0, y: 7, w: 6, h: 2, minW: 4, minH: 1 },
-
-    // Charts - full width stacked
-    { i: 'revenue-chart', x: 0, y: 9, w: 6, h: 4, minW: 4, minH: 3 },
-    { i: 'channel-chart', x: 0, y: 13, w: 6, h: 4, minW: 4, minH: 3 },
-    { i: 'donut-chart', x: 0, y: 17, w: 6, h: 4, minW: 4, minH: 3 },
-
-    // AI Components - full width stacked
-    { i: 'ai-insights', x: 0, y: 21, w: 6, h: 6, minW: 4, minH: 4 },
-    { i: 'natural-language', x: 0, y: 27, w: 6, h: 6, minW: 4, minH: 4 },
-
-    // Data Table
-    { i: 'data-table', x: 0, y: 33, w: 6, h: 4, minW: 4, minH: 3 }
-  ],
-  xs: [
-    // All components stacked vertically
-    { i: 'smart-summary', x: 0, y: 0, w: 4, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-0', x: 0, y: 3, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 0, y: 5, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 7, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 0, y: 9, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'ai-alerts', x: 0, y: 11, w: 4, h: 2, minW: 2, minH: 1 },
-    { i: 'revenue-chart', x: 0, y: 13, w: 4, h: 4, minW: 2, minH: 3 },
-    { i: 'channel-chart', x: 0, y: 17, w: 4, h: 4, minW: 2, minH: 3 },
-    { i: 'donut-chart', x: 0, y: 21, w: 4, h: 4, minW: 2, minH: 3 },
-    { i: 'ai-insights', x: 0, y: 25, w: 4, h: 6, minW: 2, minH: 4 },
-    { i: 'natural-language', x: 0, y: 31, w: 4, h: 6, minW: 2, minH: 4 },
-    { i: 'data-table', x: 0, y: 37, w: 4, h: 4, minW: 2, minH: 3 }
-  ],
-  xxs: [
-    // Ultra-compact mobile layout
-    { i: 'smart-summary', x: 0, y: 0, w: 2, h: 4, minW: 2, minH: 3 },
-    { i: 'metric-0', x: 0, y: 4, w: 2, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 0, y: 7, w: 2, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 10, w: 2, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 0, y: 13, w: 2, h: 3, minW: 2, minH: 2 },
-    { i: 'ai-alerts', x: 0, y: 16, w: 2, h: 3, minW: 2, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 19, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'channel-chart', x: 0, y: 24, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 29, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'ai-insights', x: 0, y: 34, w: 2, h: 7, minW: 2, minH: 5 },
-    { i: 'natural-language', x: 0, y: 41, w: 2, h: 7, minW: 2, minH: 5 },
-    { i: 'data-table', x: 0, y: 48, w: 2, h: 5, minW: 2, minH: 4 }
-  ]
-});
-
-function App() {
+// Theme-aware App Content Component
+function AppContent() {
+  const { theme, darkMode } = useContext(ThemeContext);
   const [dateRange, setDateRange] = useState(getDefaultDateRange());
   const [data, setData] = useState(mockData);
   const [filteredData, setFilteredData] = useState(mockData);
   const [loading, setLoading] = useState(false);
   const [isInsightsModalOpen, setIsInsightsModalOpen] = useState(false);
-  const [layouts, setLayouts] = useState(() => {
-    const savedLayouts = localStorage.getItem('dashboard-layouts');
-    return savedLayouts ? JSON.parse(savedLayouts) : getDefaultLayouts();
-  });
+  // Removed layouts state - using CSS Grid instead
 
   // Use real-time updates hook
   const { 
@@ -212,44 +102,93 @@ function App() {
     setLoading(false);
   };
 
-  const handleLayoutChange = (_, layouts) => {
-    setLayouts(layouts);
-    localStorage.setItem('dashboard-layouts', JSON.stringify(layouts));
-  };
-
   const handleDateChange = (newDateRange) => {
     setDateRange(newDateRange);
   };
 
-  const resetLayout = () => {
-    const defaultLayouts = getDefaultLayouts();
-    setLayouts(defaultLayouts);
-    localStorage.setItem('dashboard-layouts', JSON.stringify(defaultLayouts));
-  };
+  // Removed layout functions - using CSS Grid instead
 
   return (
-    <ThemeProvider>
-      <TooltipProvider>
-        <div className="min-h-screen bg-background text-foreground antialiased relative">
-          {/* Animated Background Orbs */}
-          <div className="bg-orb bg-orb-1"></div>
-          <div className="bg-orb bg-orb-2"></div>
-          <div className="bg-orb bg-orb-3"></div>
-        
-        {/* Header */}
-        <motion.header 
-          className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+    <TooltipProvider>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={theme}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="min-h-screen bg-background text-foreground antialiased relative overflow-hidden"
         >
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">ADmyBRAND Insights</h1>
-                <p className="text-muted-foreground">
-                  Advanced analytics dashboard with AI-powered insights
-                </p>
+          {/* Enhanced Animated Background Orbs with Theme Awareness */}
+          <div className="fixed inset-0 pointer-events-none">
+            <motion.div
+              className="bg-orb bg-orb-1"
+              animate={{
+                scale: darkMode ? [1, 1.1, 1] : [1, 1.2, 1],
+                opacity: darkMode ? [0.2, 0.3, 0.2] : [0.3, 0.4, 0.3]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="bg-orb bg-orb-2"
+              animate={{
+                scale: darkMode ? [1, 1.2, 1] : [1, 1.1, 1],
+                opacity: darkMode ? [0.15, 0.25, 0.15] : [0.25, 0.35, 0.25]
+              }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+            <motion.div
+              className="bg-orb bg-orb-3"
+              animate={{
+                scale: darkMode ? [1, 1.15, 1] : [1, 1.25, 1],
+                opacity: darkMode ? [0.1, 0.2, 0.1] : [0.2, 0.3, 0.2]
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+            <motion.div
+              className="bg-orb bg-orb-4"
+              animate={{
+                scale: darkMode ? [1, 1.1, 1] : [1, 1.2, 1],
+                opacity: darkMode ? [0.05, 0.1, 0.05] : [0.1, 0.15, 0.1]
+              }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+            />
+          </div>
+
+          {/* Theme-aware gradient overlay */}
+          <div className={`fixed inset-0 pointer-events-none transition-opacity duration-1000 ${
+            darkMode
+              ? 'bg-gradient-to-br from-slate-900/20 via-transparent to-slate-800/20'
+              : 'bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30'
+          }`} />
+        
+          {/* Enhanced Header with Theme Awareness */}
+          <motion.header
+            className={`relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 transition-all duration-500 ${
+              darkMode
+                ? 'bg-background/95 border-border/50 shadow-lg shadow-black/10'
+                : 'bg-background/95 border-border/30 shadow-md shadow-gray-200/50'
+            }`}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+          <div className="container mx-auto px-6 py-6">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-xl">
+                  <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">AI</span>
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                    ADmyBRAND Analytics
+                  </h1>
+                  <p className="text-muted-foreground mt-1 text-lg">
+                    AI-powered insights for Indian businesses
+                  </p>
+                </div>
               </div>
               
               <div className="flex items-center gap-3 flex-wrap">
@@ -271,16 +210,30 @@ function App() {
                   </span>
                 </div>
                 
-                {/* AI Insights Button */}
-                <Button
-                  onClick={() => setIsInsightsModalOpen(true)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300 hover:from-purple-500/20 hover:to-blue-500/20"
+                {/* Enhanced AI Insights Button */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <Brain className="h-4 w-4" />
-                  🧠 Generate Insights
-                </Button>
+                  <Button
+                    onClick={() => setIsInsightsModalOpen(true)}
+                    variant="outline"
+                    size="sm"
+                    className={`flex items-center gap-2 transition-all duration-300 ${
+                      darkMode
+                        ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/50 hover:from-purple-500/30 hover:to-blue-500/30 hover:border-purple-400/70'
+                        : 'bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300/60 hover:from-purple-500/20 hover:to-blue-500/20 hover:border-purple-400/80'
+                    }`}
+                  >
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      <Brain className="h-4 w-4" />
+                    </motion.div>
+                    🧠 Generate Insights
+                  </Button>
+                </motion.div>
                 
                 {/* Refresh Button */}
                 <Button
@@ -297,16 +250,7 @@ function App() {
                   Refresh
                 </Button>
 
-                {/* Reset Layout Button */}
-                <Button
-                  onClick={resetLayout}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <GripVertical className="h-4 w-4" />
-                  Reset Layout
-                </Button>
+
                 
                 <DarkModeToggle />
               </div>
@@ -314,33 +258,44 @@ function App() {
           </div>
         </motion.header>
 
-        {/* Main Content with Grid Layout */}
-        <main className="relative container mx-auto px-4 py-8">
-          <ResponsiveGridLayout
-            className="layout"
-            layouts={layouts}
-            onLayoutChange={handleLayoutChange}
-            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            rowHeight={60}
-            isDraggable={true}
-            isResizable={true}
-            margin={[16, 16]}
-            containerPadding={[16, 16]}
-            useCSSTransforms={true}
-            compactType="vertical"
-            preventCollision={false}
+          {/* Enhanced Main Content with Theme-Aware Layout */}
+          <motion.main
+            className="relative container mx-auto px-4 py-8 space-y-8 z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
-            {/* Smart Summary Panel */}
-            <div key="smart-summary" className="grid-item">
-              <SmartSummaryPanel data={mergedData} />
-            </div>
+          {/* Smart Summary Panel - Full Width */}
+          <section className="w-full">
+            <SmartSummaryPanel data={mergedData} />
+          </section>
 
-            {/* Metric Cards */}
-            {mergedData.metrics.map((metric, index) => {
-              const IconComponent = iconMap[metric.icon];
-              return (
-                <div key={`metric-${index}`} className="grid-item">
+            {/* Enhanced Metrics Cards with Staggered Animation */}
+            <motion.section
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              {mergedData.metrics.map((metric, index) => {
+                const IconComponent = iconMap[metric.icon];
+                return (
+                  <motion.div
+                    key={`metric-${index}`}
+                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.4 + index * 0.1,
+                      ease: "easeOut",
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    whileHover={{
+                      y: -5,
+                      transition: { duration: 0.2 }
+                    }}
+                  >
                   <MetricCard
                     title={metric.label}
                     value={metric.value}
@@ -352,58 +307,87 @@ function App() {
                     trend={metric.change >= 0 ? 'positive' : 'negative'}
                     priority={metric.label === 'Revenue' ? 'high' : 'normal'}
                   />
-                </div>
+                </motion.div>
               );
             })}
+          </motion.section>
 
-            {/* AI Alert System */}
-            <div key="ai-alerts" className="grid-item">
-              <AIAlertSystem data={mergedData} />
-            </div>
+          {/* AI Alert System - Full Width */}
+          <section className="w-full">
+            <AIAlertSystem data={mergedData} />
+          </section>
 
-            {/* Revenue Chart */}
-            <div key="revenue-chart" className="grid-item">
-              <RevenueLineChart 
-                data={mergedData.revenueData} 
+            {/* Enhanced Charts Section with Improved Animations */}
+            <motion.section
+              className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+              >
+              <RevenueLineChart
+                data={mergedData.revenueData}
                 loading={loading}
               />
-            </div>
+            </motion.div>
 
-            {/* Channel Chart */}
-            <div key="channel-chart" className="grid-item">
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+              >
               <ChannelBarChart
                 data={mergedData.channelData}
                 loading={loading}
               />
-            </div>
+            </motion.div>
+          </motion.section>
 
-            {/* AI Insights Card */}
-            <div key="ai-insights" className="grid-item">
+          {/* AI Components Section - 3 Column Layout */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
               <AIInsightCard data={mergedData} />
-            </div>
+            </motion.div>
 
-            {/* Natural Language Query */}
-            <div key="natural-language" className="grid-item">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               <NaturalLanguageQuery data={mergedData} />
-            </div>
+            </motion.div>
 
-            {/* Donut Chart */}
-            <div key="donut-chart" className="grid-item">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
               <UserRoleDonutChart
                 data={mergedData.userRoles}
                 loading={loading}
               />
-            </div>
+            </motion.div>
+          </section>
 
-            {/* Data Table */}
-            <div key="data-table" className="grid-item">
-              <DataTable
-                data={mergedData.tableData}
-                loading={loading}
-              />
-            </div>
-          </ResponsiveGridLayout>
-        </main>
+          {/* Data Table - Full Width */}
+          <section className="w-full">
+            <DataTable
+              data={mergedData.tableData}
+              loading={loading}
+            />
+          </section>
+
+        </motion.main>
 
           {/* AI Smart Insights Modal */}
           <SmartInsightsModal
@@ -415,10 +399,19 @@ function App() {
           {/* AI Feedback Floating Button */}
           <AIFeedbackButton data={mergedData} />
 
-          {/* Toast Notifications */}
+          {/* Toast Notifications with Theme Awareness */}
           <Toaster />
-        </div>
-      </TooltipProvider>
+        </motion.div>
+      </AnimatePresence>
+    </TooltipProvider>
+  );
+}
+
+// Main App Component with Theme Provider
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
     </ThemeProvider>
   );
 }

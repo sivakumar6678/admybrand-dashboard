@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { 
   Table, 
   TableBody, 
@@ -8,27 +8,21 @@ import {
   TableHeader, 
   TableRow 
 } from "./ui/table";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import { Badge } from "./ui/badge";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronsLeft, 
-  ChevronsRight,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
+import {
+  ChevronLeft,
+  ChevronRight,
   Download,
   FileText,
   Search,
@@ -175,7 +169,7 @@ export default function DataTable({ data, loading = false }) {
       item.role,
       item.status,
       item.lastLogin,
-      `$${item.revenue.toLocaleString()}`
+      `₹${item.revenue.toLocaleString('en-IN')}`
     ]);
 
     doc.autoTable({
@@ -234,11 +228,15 @@ export default function DataTable({ data, loading = false }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
+      className="h-full"
     >
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col shadow-lg">
+        <CardHeader className="flex-shrink-0 pb-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle>User Data</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-xl">User Analytics</CardTitle>
+              <span className="text-sm text-muted-foreground">({sortedData.length} records)</span>
+            </div>
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={exportToCSV}
@@ -252,8 +250,8 @@ export default function DataTable({ data, loading = false }) {
             </div>
           </div>
         </CardHeader>
-        
-        <CardContent>
+
+        <CardContent className="flex-1 overflow-hidden p-6">
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
@@ -292,18 +290,19 @@ export default function DataTable({ data, loading = false }) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
+          <div className="rounded-md shadow-sm border bg-white text-black border-gray-200 dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700 overflow-hidden flex-1 min-h-[400px] transition-colors duration-300 ease-in-out">
+            <div className="overflow-y-auto max-h-[500px]">
+              <Table className="w-full">
+              <TableHeader className="sticky top-0 bg-white text-black dark:bg-[#1c1c1c] dark:text-white z-10 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 ease-in-out">
+                <TableRow className="hover:bg-transparent h-12">
+                  <TableHead className="w-12 h-12">
                     <Checkbox
                       checked={selectedRows.size === paginatedData.length && paginatedData.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center gap-2">
@@ -311,8 +310,8 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="name" />
                     </div>
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
                     onClick={() => handleSort('email')}
                   >
                     <div className="flex items-center gap-2">
@@ -320,8 +319,8 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="email" />
                     </div>
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
                     onClick={() => handleSort('role')}
                   >
                     <div className="flex items-center gap-2">
@@ -329,8 +328,8 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="role" />
                     </div>
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
                     onClick={() => handleSort('status')}
                   >
                     <div className="flex items-center gap-2">
@@ -338,8 +337,8 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="status" />
                     </div>
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
                     onClick={() => handleSort('lastLogin')}
                   >
                     <div className="flex items-center gap-2">
@@ -347,8 +346,8 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="lastLogin" />
                     </div>
                   </TableHead>
-                  <TableHead 
-                    className="cursor-pointer hover:bg-muted/50 text-right"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 text-right h-12"
                     onClick={() => handleSort('revenue')}
                   >
                     <div className="flex items-center justify-end gap-2">
@@ -356,7 +355,7 @@ export default function DataTable({ data, loading = false }) {
                       <SortIcon column="revenue" />
                     </div>
                   </TableHead>
-                  <TableHead className="w-12">Actions</TableHead>
+                  <TableHead className="w-12 h-12">Actions</TableHead>
               </TableRow>
             </TableHeader>
               <TableBody>
@@ -366,45 +365,52 @@ export default function DataTable({ data, loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-muted/50"
+                    className="hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12 min-h-[3rem] border-b border-gray-200 dark:border-gray-700"
                   >
-                    <TableCell>
+                    <TableCell className="h-12 py-3">
                       <Checkbox
                         checked={selectedRows.has(user.id)}
                         onCheckedChange={(checked) => handleSelectRow(user.id, checked)}
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-medium h-12 py-3">{user.name}</TableCell>
+                    <TableCell className="h-12 py-3">{user.email}</TableCell>
+                    <TableCell className="h-12 py-3">
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="h-12 py-3">
                       <StatusBadge status={user.status} />
                     </TableCell>
-                    <TableCell>{user.lastLogin}</TableCell>
-                    <TableCell className="text-right font-medium">
-                      ${user.revenue.toLocaleString()}
+                    <TableCell className="h-12 py-3">{user.lastLogin}</TableCell>
+                    <TableCell className="text-right font-medium h-12 py-3">
+                      ₹{user.revenue.toLocaleString('en-IN')}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="h-12 py-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleRowAction('View', user)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem
+                            onClick={() => handleRowAction('View', user)}
+                          >
+                            <Eye className="h-4 w-4" />
+                            View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleRowAction('Edit', user)}>
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                          <DropdownMenuItem
+                            onClick={() => handleRowAction('Edit', user)}
+                          >
+                            <Edit className="h-4 w-4" />
+                            Edit User
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleRowAction('Delete', user)}>
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                          <DropdownMenuItem
+                            onClick={() => handleRowAction('Delete', user)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Delete User
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -412,7 +418,8 @@ export default function DataTable({ data, loading = false }) {
                   </motion.tr>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           </div>
 
           {/* Pagination */}

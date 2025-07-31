@@ -1,14 +1,11 @@
-import React from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Sparkles, 
-  ArrowUpIcon, 
-  ArrowDownIcon 
+import {
+  Sparkles,
+  ArrowUpIcon,
+  ArrowDownIcon
 } from "lucide-react";
 import { cn } from "../utils/cn";
 
@@ -55,18 +52,9 @@ export default function MetricCard({
     }
   }
 
-  const getGradientClass = (title) => {
-    switch (title.toLowerCase()) {
-      case 'revenue': return 'gradient-primary';
-      case 'users': return 'gradient-success';
-      case 'conversion rate': return 'gradient-secondary';
-      case 'growth %': return 'gradient-warning';
-      default: return 'gradient-primary';
-    }
-  };
+  // Removed unused gradient class function
 
   const colors = getCardColors();
-  const gradientClass = getGradientClass(title);
   const changeColor = isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
   const changeBgColor = isPositive 
     ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
@@ -147,13 +135,13 @@ export default function MetricCard({
         </CardHeader>
       
         <CardContent className="relative z-10">
-          <motion.div 
+          <motion.div
             className="text-2xl font-bold mb-3"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
           >
-            {unit === '$' && unit}
+            {(unit === '₹') && unit}
             <CountUp
               start={previousValue}
               end={value}
@@ -165,8 +153,14 @@ export default function MetricCard({
                 // Enhanced easing function for smoother animation
                 return c * ((t = t / d - 1) * t * t + 1) + b
               }}
+              formattingFn={(value) => {
+                if (unit === '₹') {
+                  return value.toLocaleString('en-IN');
+                }
+                return value.toLocaleString();
+              }}
             />
-            {unit !== '$' && unit}
+            {unit !== '₹' && unit}
           </motion.div>
         
           {growth !== undefined && (

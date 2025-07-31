@@ -81,7 +81,7 @@ export default function RevenueLineChart({ data, loading = false }) {
                   backdropFilter: 'blur(10px)'
                 }}
                 formatter={(value, name) => [
-                  name === 'revenue' ? `$${value.toLocaleString()}` : `${value.toLocaleString()} users`,
+                  name === 'revenue' ? `₹${value.toLocaleString('en-IN')}` : `${value.toLocaleString('en-IN')} users`,
                   name === 'revenue' ? 'Revenue' : 'Active Users'
                 ]}
                 labelStyle={{ fontWeight: 'bold', marginBottom: '8px' }}

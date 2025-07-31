@@ -1,5 +1,4 @@
 // Mock AI Service for simulating AI-powered features
-import { format, subDays, isAfter } from 'date-fns';
 
 // Simulate API delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -104,10 +103,10 @@ export const processNaturalLanguageQuery = async (query, data) => {
   
   // Simple keyword matching for demo purposes
   if (queryLower.includes('revenue') || queryLower.includes('money') || queryLower.includes('sales')) {
-    const revenue = data?.metrics?.find(m => m.label === 'Revenue')?.value || 124500;
+    const revenue = data?.metrics?.find(m => m.label === 'Revenue')?.value || 10333500;
     const growth = data?.metrics?.find(m => m.label === 'Growth %')?.value || 12.3;
     return {
-      response: `Current revenue is $${revenue.toLocaleString()} with a growth rate of ${growth}%. Revenue has been ${growth > 10 ? 'performing excellently' : 'showing steady growth'} this quarter.`,
+      response: `Current revenue is ₹${revenue.toLocaleString('en-IN')} with a growth rate of ${growth}%. Revenue has been ${growth > 10 ? 'performing excellently' : 'showing steady growth'} this quarter.`,
       confidence: 95,
       sources: ['revenue_metrics', 'growth_data']
     };

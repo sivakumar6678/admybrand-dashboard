@@ -1,28 +1,53 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../context/ThemeContext";
 import { Button } from "./ui/button";
-import { Sun, Moon, Stars, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
+import { useToast } from "../hooks/useToast";
 
 export function DarkModeToggle() {
-  const { darkMode, theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme, darkMode, isTransitioning } = useContext(ThemeContext);
+  const { toast } = useToast();
 
   const getThemeIcon = () => {
     switch (theme) {
       case 'light':
-        return <Sun className="h-4 w-4" />
+        return <Sun className="h-4 w-4 text-amber-500" />
       case 'dark':
-        return <Moon className="h-4 w-4" />
+        return <Moon className="h-4 w-4 text-blue-400" />
       default:
-        return <Monitor className="h-4 w-4" />
+        return <Monitor className="h-4 w-4 text-gray-500" />
     }
   }
+
+  const handleThemeChange = (newTheme) => {
+    setTheme(newTheme);
+
+    const themeNames = {
+      light: 'Light Mode',
+      dark: 'Dark Mode',
+      system: 'System Theme'
+    };
+
+    const themeIcons = {
+      light: '☀️',
+      dark: '🌙',
+      system: '💻'
+    };
+
+    toast({
+      title: `${themeIcons[newTheme]} ${themeNames[newTheme]}`,
+      description: `Switched to ${themeNames[newTheme].toLowerCase()}`,
+      duration: 2000,
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -31,35 +56,77 @@ export function DarkModeToggle() {
           variant="outline"
           size="icon"
           aria-label="Toggle theme"
-          className="relative overflow-hidden group hover:shadow-glow transition-all duration-500"
+          className={`relative overflow-hidden group transition-all duration-500 ${
+            isTransitioning ? 'animate-pulse' : 'hover:shadow-glow'
+          } ${
+            darkMode
+              ? 'border-gray-600 hover:border-gray-500'
+              : 'border-gray-300 hover:border-gray-400'
+          }`}
         >
           <motion.div
             key={theme}
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.3, type: "spring" }}
+            transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
             className="relative z-10"
           >
             {getThemeIcon()}
           </motion.div>
-          
-          {/* Animated background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          {/* Enhanced animated background */}
+          <motion.div
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              darkMode
+                ? 'bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10'
+                : 'bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10'
+            }`}
+            initial={{ opacity: 0 }}
+            whileHover={{ opacity: 1 }}
+          />
         </Button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
-          <Sun className="mr-2 h-4 w-4" />
-          <span>Light</span>
+
+      <DropdownMenuContent align="end" className="w-44 p-2">
+        <DropdownMenuItem
+          onClick={() => handleThemeChange('light')}
+          className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
+            theme === 'light' ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300' : ''
+          }`}
+        >
+          <Sun className="h-4 w-4 text-amber-500" />
+          <div className="flex flex-col">
+            <span className="font-medium">Light</span>
+            <span className="text-xs text-muted-foreground">Bright theme</span>
+          </div>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
-          <Moon className="mr-2 h-4 w-4" />
-          <span>Dark</span>
+
+        <DropdownMenuItem
+          onClick={() => handleThemeChange('dark')}
+          className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
+            theme === 'dark' ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300' : ''
+          }`}
+        >
+          <Moon className="h-4 w-4 text-blue-400" />
+          <div className="flex flex-col">
+            <span className="font-medium">Dark</span>
+            <span className="text-xs text-muted-foreground">Dark theme</span>
+          </div>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
-          <Monitor className="mr-2 h-4 w-4" />
-          <span>System</span>
+
+        <DropdownMenuSeparator className="my-2" />
+
+        <DropdownMenuItem
+          onClick={() => handleThemeChange('system')}
+          className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
+            theme === 'system' ? 'bg-gray-50 dark:bg-gray-950/20 text-gray-700 dark:text-gray-300' : ''
+          }`}
+        >
+          <Monitor className="h-4 w-4 text-gray-500" />
+          <div className="flex flex-col">
+            <span className="font-medium">System</span>
+            <span className="text-xs text-muted-foreground">Auto detect</span>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
