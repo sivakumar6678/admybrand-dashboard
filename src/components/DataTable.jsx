@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { 
   Table, 
   TableBody, 
@@ -13,39 +13,28 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import { Badge } from "./ui/badge";
+import { Skeleton } from "./ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronsLeft, 
-  ChevronsRight,
-  ArrowUpDown,
-  ArrowUp,
-  ArrowDown,
+import {
+  ChevronLeft,
+  ChevronRight,
   Download,
-  FileText,
   Search,
   MoreHorizontal,
   Eye,
   Edit,
   Trash2,
   ChevronUp,
-  ChevronDown,
-  Filter,
-  X
+  ChevronDown
 } from "lucide-react";
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+
 import Papa from 'papaparse';
 import { useToast } from "../hooks/useToast";
-import { cn } from "../utils/cn";
 
 const RoleBadge = ({ role }) => {
   const variants = {
@@ -79,13 +68,24 @@ const StatusBadge = ({ status }) => (
 
 export default function DataTable({ data = [], loading = false }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedRows, setSelectedRows] = useState(new Set());
   const { toast } = useToast();
+
+  // Debug table data in development only
+  if (import.meta.env.DEV) {
+    console.log('DataTable data:', { 
+      data, 
+      loading, 
+      isArray: Array.isArray(data), 
+      length: data?.length || 0,
+      firstItem: data?.[0] || null 
+    });
+  }
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -165,27 +165,7 @@ export default function DataTable({ data = [], loading = false }) {
       <ChevronDown className="h-4 w-4" />
   }
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.text('User Analytics Report', 20, 20);
-    
-    const tableData = sortedData.map(item => [
-      item.name,
-      item.email,
-      item.role,
-      item.status,
-      item.lastLogin,
-      `$${item.revenue.toLocaleString()}`
-    ]);
 
-    doc.autoTable({
-      head: [['Name', 'Email', 'Role', 'Status', 'Last Login', 'Revenue']],
-      body: tableData,
-      startY: 30,
-    });
-
-    doc.save('analytics-report.pdf');
-  };
 
   const exportToCSV = () => {
     const csvData = selectedRows.size > 0 
@@ -224,23 +204,23 @@ export default function DataTable({ data = [], loading = false }) {
           <div className="space-y-6 h-full">
             {/* Filter skeleton */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="h-10 bg-muted animate-pulse rounded flex-1"></div>
-              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
-              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
+              <Skeleton className="h-10 flex-1" />
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-10 w-32" />
             </div>
             {/* Table skeleton */}
             <div className="space-y-3 flex-1">
-              <div className="h-12 bg-muted animate-pulse rounded"></div>
+              <Skeleton className="h-12 w-full" />
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="h-16 bg-muted/50 animate-pulse rounded"></div>
+                <Skeleton key={i} className="h-16 w-full" />
               ))}
             </div>
             {/* Pagination skeleton */}
             <div className="flex justify-between items-center py-4 border-t">
-              <div className="h-4 bg-muted animate-pulse rounded w-48"></div>
+              <Skeleton className="h-4 w-48" />
               <div className="flex gap-2">
-                <div className="h-8 bg-muted animate-pulse rounded w-20"></div>
-                <div className="h-8 bg-muted animate-pulse rounded w-20"></div>
+                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-8 w-20" />
               </div>
             </div>
           </div>
@@ -318,10 +298,10 @@ export default function DataTable({ data = [], loading = false }) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border overflow-hidden flex-1 flex flex-col min-h-0 bg-card">
-            <div className="overflow-auto flex-1 max-h-[600px] min-h-[400px]">
+          <div className="rounded-md border overflow-hidden flex-1 flex flex-col min-h-0 bg-card shadow-sm">
+            <div className="overflow-auto flex-1 max-h-[900px] min-h-[650px]">
             <Table className="relative">
-              <TableHeader className="sticky top-0 bg-muted/50 z-10">
+              <TableHeader className="sticky top-0 bg-muted/70 backdrop-blur-sm z-10 border-b-2 border-border">
                 <TableRow className="border-b hover:bg-transparent">
                   <TableHead className="w-12 py-4 px-4 font-semibold">
                     <Checkbox
@@ -393,24 +373,24 @@ export default function DataTable({ data = [], loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-muted/30 transition-colors even:bg-muted/5 group"
+                    className="hover:bg-muted/50 hover:shadow-sm transition-all duration-200 even:bg-muted/20 group border-b border-border/30"
                   >
-                    <TableCell className="py-4 px-4">
+                    <TableCell className="py-5 px-4">
                       <Checkbox
                         checked={selectedRows.has(user.id)}
                         onCheckedChange={(checked) => handleSelectRow(user.id, checked)}
                       />
                     </TableCell>
-                    <TableCell className="font-medium py-4 px-4">{user.name}</TableCell>
-                    <TableCell className="py-4 px-4">{user.email}</TableCell>
-                    <TableCell className="py-4 px-4">
+                    <TableCell className="font-semibold py-5 px-4 text-foreground">{user.name}</TableCell>
+                    <TableCell className="py-5 px-4 text-muted-foreground">{user.email}</TableCell>
+                    <TableCell className="py-5 px-4">
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell className="py-4 px-4">
+                    <TableCell className="py-5 px-4">
                       <StatusBadge status={user.status} />
                     </TableCell>
-                    <TableCell className="py-4 px-4">{user.lastLogin}</TableCell>
-                    <TableCell className="text-right font-medium py-4 px-4">
+                    <TableCell className="py-5 px-4 text-muted-foreground">{user.lastLogin}</TableCell>
+                    <TableCell className="text-right font-semibold py-5 px-4 text-foreground">
                       ₹{user.revenue.toLocaleString()}
                     </TableCell>
                     <TableCell className="py-4 px-4">
@@ -444,11 +424,30 @@ export default function DataTable({ data = [], loading = false }) {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between space-x-2 py-6 px-2 border-t bg-muted/20">
-            <div className="text-sm text-muted-foreground font-medium">
-              Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
-              {Math.min(currentPage * itemsPerPage, sortedData.length)} of{' '}
-              <span className="font-semibold">{sortedData.length}</span> results
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-2 py-6 px-2 border-t bg-muted/20">
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-muted-foreground font-medium">
+                Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
+                {Math.min(currentPage * itemsPerPage, sortedData.length)} of{' '}
+                <span className="font-semibold">{sortedData.length}</span> results
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">Rows per page:</span>
+                <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+                  setItemsPerPage(Number(value));
+                  setCurrentPage(1);
+                }}>
+                  <SelectTrigger className="w-20 h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="15">15</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-muted-foreground">

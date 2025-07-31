@@ -18,4 +18,15 @@ export default defineConfig({
     // Make env variables available to the client
     'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY),
   },
+  build: {
+    sourcemap: false, // Disable source maps in production to avoid source map errors
+  },
+  esbuild: {
+    // Remove console statements in production
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+  },
+  // Fix source map issues in development
+  css: {
+    devSourcemap: false,
+  },
 })

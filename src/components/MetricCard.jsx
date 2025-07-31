@@ -1,14 +1,12 @@
-import React from "react";
+
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Sparkles, 
-  ArrowUpIcon, 
-  ArrowDownIcon 
+import {
+  Sparkles,
+  ArrowUpIcon,
+  ArrowDownIcon
 } from "lucide-react";
 import { cn } from "../utils/cn";
 
@@ -55,18 +53,9 @@ export default function MetricCard({
     }
   }
 
-  const getGradientClass = (title) => {
-    switch (title.toLowerCase()) {
-      case 'revenue': return 'gradient-primary';
-      case 'users': return 'gradient-success';
-      case 'conversion rate': return 'gradient-secondary';
-      case 'growth %': return 'gradient-warning';
-      default: return 'gradient-primary';
-    }
-  };
+
 
   const colors = getCardColors();
-  const gradientClass = getGradientClass(title);
   const changeColor = isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
   const changeBgColor = isPositive 
     ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 

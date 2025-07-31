@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { motion } from 'framer-motion';
 import { ThemeProvider } from './context/ThemeContext';
@@ -10,10 +10,18 @@ import { toast } from 'sonner';
 
 // Import dashboard components
 import MetricCard from './components/MetricCard';
-import RevenueLineChart from './components/LineChart';
-import ChannelBarChart from './components/BarChart';
-import UserRoleDonutChart from './components/DonutChart';
 import DataTable from './components/DataTable';
+import ErrorBoundary from './components/ErrorBoundary';
+
+// Professional Chart Components
+import OverviewChart from './components/OverviewChart';
+import RevenueChart from './components/RevenueChart';
+import SentimentTrendChart from './components/SentimentTrendChart';
+import WeeklyWorkloadChart from './components/WeeklyWorkloadChart';
+import DepartmentPieChart from './components/DepartmentPieChart';
+
+// Test chart to verify Recharts is working
+import TestChart from './components/TestChart';
 
 import { 
   DollarSign, 
@@ -42,57 +50,68 @@ const iconMap = {
   BarChart2
 };
 
-// Enhanced responsive layout configuration
+// Professional responsive layout configuration with proper heights
 const getDefaultLayouts = () => ({
   lg: [
-    { i: 'metric-0', x: 0, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 3, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 6, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 9, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 3, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'channel-chart', x: 6, y: 3, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'donut-chart', x: 0, y: 9, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'data-table', x: 4, y: 9, w: 8, h: 6, minW: 6, minH: 5 }
+    { i: 'metric-0', x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-1', x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-2', x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-3', x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+    { i: 'test-chart', x: 0, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
+    { i: 'overview-chart', x: 6, y: 2, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'revenue-chart', x: 0, y: 6, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'sentiment-chart', x: 0, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'workload-chart', x: 4, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'department-chart', x: 8, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'data-table', x: 0, y: 18, w: 12, h: 8, minW: 6, minH: 6 }
   ],
   md: [
     { i: 'metric-0', x: 0, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
     { i: 'metric-1', x: 5, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
     { i: 'metric-2', x: 0, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
     { i: 'metric-3', x: 5, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 4, w: 10, h: 5, minW: 6, minH: 4 },
-    { i: 'channel-chart', x: 0, y: 9, w: 10, h: 5, minW: 6, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 14, w: 5, h: 5, minW: 4, minH: 4 },
-    { i: 'data-table', x: 5, y: 14, w: 5, h: 5, minW: 4, minH: 4 }
+    { i: 'overview-chart', x: 0, y: 4, w: 10, h: 6, minW: 6, minH: 5 },
+    { i: 'revenue-chart', x: 0, y: 10, w: 10, h: 6, minW: 6, minH: 5 },
+    { i: 'sentiment-chart', x: 0, y: 16, w: 5, h: 6, minW: 4, minH: 5 },
+    { i: 'workload-chart', x: 5, y: 16, w: 5, h: 6, minW: 4, minH: 5 },
+    { i: 'department-chart', x: 0, y: 22, w: 5, h: 6, minW: 4, minH: 5 },
+    { i: 'data-table', x: 5, y: 22, w: 5, h: 8, minW: 4, minH: 6 }
   ],
   sm: [
     { i: 'metric-0', x: 0, y: 0, w: 6, h: 2, minW: 3, minH: 2 },
     { i: 'metric-1', x: 0, y: 2, w: 6, h: 2, minW: 3, minH: 2 },
     { i: 'metric-2', x: 0, y: 4, w: 6, h: 2, minW: 3, minH: 2 },
     { i: 'metric-3', x: 0, y: 6, w: 6, h: 2, minW: 3, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 8, w: 6, h: 5, minW: 4, minH: 4 },
-    { i: 'channel-chart', x: 0, y: 13, w: 6, h: 5, minW: 4, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 18, w: 6, h: 5, minW: 4, minH: 4 },
-    { i: 'data-table', x: 0, y: 23, w: 6, h: 6, minW: 4, minH: 5 }
+    { i: 'overview-chart', x: 0, y: 8, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'revenue-chart', x: 0, y: 14, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'sentiment-chart', x: 0, y: 20, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'workload-chart', x: 0, y: 26, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'department-chart', x: 0, y: 32, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'data-table', x: 0, y: 38, w: 6, h: 8, minW: 4, minH: 6 }
   ],
   xs: [
     { i: 'metric-0', x: 0, y: 0, w: 4, h: 2, minW: 2, minH: 2 },
     { i: 'metric-1', x: 0, y: 2, w: 4, h: 2, minW: 2, minH: 2 },
     { i: 'metric-2', x: 0, y: 4, w: 4, h: 2, minW: 2, minH: 2 },
     { i: 'metric-3', x: 0, y: 6, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 8, w: 4, h: 5, minW: 3, minH: 4 },
-    { i: 'channel-chart', x: 0, y: 13, w: 4, h: 5, minW: 3, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 18, w: 4, h: 5, minW: 3, minH: 4 },
-    { i: 'data-table', x: 0, y: 23, w: 4, h: 6, minW: 3, minH: 5 }
+    { i: 'overview-chart', x: 0, y: 8, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'revenue-chart', x: 0, y: 14, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'sentiment-chart', x: 0, y: 20, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'workload-chart', x: 0, y: 26, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'department-chart', x: 0, y: 32, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'data-table', x: 0, y: 38, w: 4, h: 8, minW: 3, minH: 6 }
   ],
   xxs: [
     { i: 'metric-0', x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
     { i: 'metric-1', x: 0, y: 2, w: 2, h: 2, minW: 2, minH: 2 },
     { i: 'metric-2', x: 0, y: 4, w: 2, h: 2, minW: 2, minH: 2 },
     { i: 'metric-3', x: 0, y: 6, w: 2, h: 2, minW: 2, minH: 2 },
-    { i: 'revenue-chart', x: 0, y: 8, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'channel-chart', x: 0, y: 13, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'donut-chart', x: 0, y: 18, w: 2, h: 5, minW: 2, minH: 4 },
-    { i: 'data-table', x: 0, y: 23, w: 2, h: 6, minW: 2, minH: 5 }
+    { i: 'overview-chart', x: 0, y: 8, w: 2, h: 6, minW: 2, minH: 5 },
+    { i: 'revenue-chart', x: 0, y: 14, w: 2, h: 6, minW: 2, minH: 5 },
+    { i: 'sentiment-chart', x: 0, y: 20, w: 2, h: 6, minW: 2, minH: 5 },
+    { i: 'workload-chart', x: 0, y: 26, w: 2, h: 6, minW: 2, minH: 5 },
+    { i: 'department-chart', x: 0, y: 32, w: 2, h: 6, minW: 2, minH: 5 },
+    { i: 'data-table', x: 0, y: 38, w: 2, h: 8, minW: 2, minH: 6 }
   ]
 });
 
@@ -127,6 +146,12 @@ function App() {
     metrics: realtimeData.metrics || filteredData.metrics
   };
 
+  // Debug: Log merged data structure
+  // Debug merged data in development only
+  if (import.meta.env.DEV) {
+    console.log('App mergedData:', mergedData);
+  }
+
   const handleRefresh = async () => {
     setLoading(true);
     toast.loading('Refreshing dashboard data...', { id: 'refresh' });
@@ -153,7 +178,7 @@ function App() {
     toast.success('Dashboard data refreshed successfully!', { id: 'refresh' });
   };
 
-  const handleLayoutChange = (layout, layouts) => {
+  const handleLayoutChange = (_, layouts) => {
     setLayouts(layouts);
     localStorage.setItem('dashboard-layouts', JSON.stringify(layouts));
   };
@@ -276,7 +301,7 @@ function App() {
             onLayoutChange={handleLayoutChange}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            rowHeight={60}
+            rowHeight={80}
             isDraggable={true}
             isResizable={true}
             margin={[16, 16]}
@@ -305,36 +330,65 @@ function App() {
               );
             })}
 
-            {/* Revenue Chart */}
+            {/* Test Chart to verify Recharts is working */}
+            <div key="test-chart" className="grid-item">
+              <TestChart />
+            </div>
+
+            {/* Professional Chart Components */}
+            <div key="overview-chart" className="grid-item">
+              <ErrorBoundary onRetry={handleRefresh}>
+                <OverviewChart 
+                  data={mergedData.overviewData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
+            </div>
+
             <div key="revenue-chart" className="grid-item">
-              <RevenueLineChart 
-                data={mergedData.revenueData} 
-                loading={loading}
-              />
+              <ErrorBoundary onRetry={handleRefresh}>
+                <RevenueChart 
+                  data={mergedData.revenueData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
             </div>
 
-            {/* Channel Chart */}
-            <div key="channel-chart" className="grid-item">
-              <ChannelBarChart 
-                data={mergedData.channelData} 
-                loading={loading}
-              />
+            <div key="sentiment-chart" className="grid-item">
+              <ErrorBoundary onRetry={handleRefresh}>
+                <SentimentTrendChart 
+                  data={mergedData.sentimentData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
             </div>
 
-            {/* Donut Chart */}
-            <div key="donut-chart" className="grid-item">
-              <UserRoleDonutChart 
-                data={mergedData.userRoles} 
-                loading={loading}
-              />
+            <div key="workload-chart" className="grid-item">
+              <ErrorBoundary onRetry={handleRefresh}>
+                <WeeklyWorkloadChart 
+                  data={mergedData.workloadData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
+            </div>
+
+            <div key="department-chart" className="grid-item">
+              <ErrorBoundary onRetry={handleRefresh}>
+                <DepartmentPieChart 
+                  data={mergedData.departmentData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
             </div>
 
             {/* Data Table */}
             <div key="data-table" className="grid-item">
-              <DataTable 
-                data={mergedData.tableData} 
-                loading={loading}
-              />
+              <ErrorBoundary onRetry={handleRefresh}>
+                <DataTable 
+                  data={mergedData.tableData} 
+                  loading={loading}
+                />
+              </ErrorBoundary>
             </div>
           </ResponsiveGridLayout>
         </main>

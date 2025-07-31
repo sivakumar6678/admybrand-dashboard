@@ -5,25 +5,43 @@
     {"label": "Conversion Rate", "value": 8.7, "icon": "TrendingUp", "change": 0.9, "unit": "%"},
     {"label": "Growth %", "value": 12.3, "icon": "BarChart2", "change": 1.5, "unit": "%"}
   ],
+  "overviewData": [
+    {"month": "Jan", "moodScore": 8.2, "productivity": 85, "teamSize": 12},
+    {"month": "Feb", "moodScore": 7.8, "productivity": 88, "teamSize": 14},
+    {"month": "Mar", "moodScore": 8.5, "productivity": 92, "teamSize": 15},
+    {"month": "Apr", "moodScore": 7.9, "productivity": 87, "teamSize": 16},
+    {"month": "May", "moodScore": 8.7, "productivity": 94, "teamSize": 18},
+    {"month": "Jun", "moodScore": 8.1, "productivity": 89, "teamSize": 20}
+  ],
   "revenueData": [
-    {"month": "Jan", "revenue": 7055000, "users": 2800},
-    {"month": "Feb", "revenue": 7636000, "users": 2950},
-    {"month": "Mar", "revenue": 6474000, "users": 2700},
-    {"month": "Apr", "revenue": 8134000, "users": 3100},
-    {"month": "May", "revenue": 8715000, "users": 3250},
-    {"month": "Jun", "revenue": 10333500, "users": 3200}
+    {"month": "Jan", "revenue": 245000, "productivity": 85},
+    {"month": "Feb", "revenue": 267000, "productivity": 88},
+    {"month": "Mar", "revenue": 298000, "productivity": 92},
+    {"month": "Apr", "revenue": 276000, "productivity": 87},
+    {"month": "May", "revenue": 312000, "productivity": 94},
+    {"month": "Jun", "revenue": 289000, "productivity": 89}
   ],
-  "channelData": [
-    {"channel": "Organic Search", "users": 1280, "conversions": 112},
-    {"channel": "Social Media", "users": 960, "conversions": 85},
-    {"channel": "Email Marketing", "users": 640, "conversions": 78},
-    {"channel": "Paid Ads", "users": 320, "conversions": 45}
+  "sentimentData": [
+    {"week": "Week 1", "sentiment": 7.5, "engagement": 78},
+    {"week": "Week 2", "sentiment": 8.1, "engagement": 82},
+    {"week": "Week 3", "sentiment": 7.8, "engagement": 79},
+    {"week": "Week 4", "sentiment": 8.3, "engagement": 85},
+    {"week": "Week 5", "sentiment": 8.0, "engagement": 81},
+    {"week": "Week 6", "sentiment": 8.6, "engagement": 88}
   ],
-  "userRoles": [
-    {"role": "Admin", "count": 45, "percentage": 1.4},
-    {"role": "Manager", "count": 128, "percentage": 4.0},
-    {"role": "User", "count": 2847, "percentage": 89.0},
-    {"role": "Guest", "count": 180, "percentage": 5.6}
+  "workloadData": [
+    {"week": "Week 1", "hoursWorked": 42, "goalHours": 40, "efficiency": 95},
+    {"week": "Week 2", "hoursWorked": 45, "goalHours": 40, "efficiency": 88},
+    {"week": "Week 3", "hoursWorked": 38, "goalHours": 40, "efficiency": 98},
+    {"week": "Week 4", "hoursWorked": 44, "goalHours": 40, "efficiency": 92},
+    {"week": "Week 5", "hoursWorked": 41, "goalHours": 40, "efficiency": 96},
+    {"week": "Week 6", "hoursWorked": 43, "goalHours": 40, "efficiency": 90}
+  ],
+  "departmentData": [
+    {"department": "Engineering", "count": 45, "percentage": 42.5},
+    {"department": "Design", "count": 18, "percentage": 17.0},
+    {"department": "Marketing", "count": 22, "percentage": 20.8},
+    {"department": "Sales", "count": 21, "percentage": 19.8}
   ],
   "tableData": [
     {"id": 1, "name": "John Doe", "email": "john@example.com", "role": "Admin", "status": "Active", "lastLogin": "2024-01-15", "revenue": 1279860},

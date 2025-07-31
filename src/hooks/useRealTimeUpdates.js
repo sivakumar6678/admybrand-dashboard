@@ -13,7 +13,7 @@ export const useRealTimeUpdates = (initialData, updateInterval = 30000) => {
 
   const updateMetrics = useCallback(() => {
     setIsUpdating(true)
-    
+
     setTimeout(() => {
       setData(prevData => ({
         ...prevData,
@@ -21,9 +21,14 @@ export const useRealTimeUpdates = (initialData, updateInterval = 30000) => {
           ...metric,
           value: generateRandomUpdate(metric.value, 0.05),
           change: (Math.random() * 10 - 5).toFixed(1)
-        }))
+        })),
+        // Preserve all chart data
+        revenueData: prevData.revenueData,
+        channelData: prevData.channelData,
+        userRoles: prevData.userRoles,
+        tableData: prevData.tableData
       }))
-      
+
       setIsUpdating(false)
       setLastUpdated(new Date())
     }, 1000)
