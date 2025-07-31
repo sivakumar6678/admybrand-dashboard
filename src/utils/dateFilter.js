@@ -90,10 +90,7 @@ export const generateFilteredMockData = (originalData, dateRange) => {
   return {
     ...originalData,
     revenueData: filteredRevenueData,
-    tableData: filteredTableData,
-    // Preserve chart data that doesn't need date filtering
-    channelData: originalData.channelData,
-    userRoles: originalData.userRoles
+    tableData: filteredTableData
   };
 };
 

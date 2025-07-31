@@ -1,34 +1,8 @@
-# 🚀 ADmyBRAND Advanced Analytics Dashboard
+# 🧠 ADmyBRAND Insights - AI-Powered Analytics Dashboard
 
-An enterprise-grade dashboard built with **React 19**, **Vite**, and **shadcn/ui**. Features live AI-powered insights with Google Gemini, advanced command palette, enhanced animations, and modern UX patterns.
+A cutting-edge, interactive analytics dashboard built with **React 19**, **Vite**, and **shadcn/ui**. Features AI-powered insights, draggable grid layout, advanced date filtering, real-time updates, and a beautiful dark/light mode toggle.
 
-## ✨ New Features Added
-
-### 🤖 Live AI Insights with Google Gemini
-- **Real-time Analysis**: Advanced business insights using Google Gemini AI
-- **Smart Recommendations**: Data-driven actionable recommendations
-- **Fallback Mode**: Graceful offline mode when API unavailable
-- **Error Recovery**: Robust error handling with retry functionality
-
-### ⌨️ Command Palette (Cmd+K)
-- **Instant Access**: Press `Cmd+K`/`Ctrl+K` for quick actions
-- **Smart Search**: Find any dashboard function instantly
-- **Keyboard Navigation**: Full keyboard shortcut support
-- **Visual Feedback**: Toast notifications for all actions
-
-### 📊 Enhanced Metric Cards
-- **Advanced Animations**: Smooth number counting with easing
-- **Visual Effects**: Hover particles and transition effects
-- **Smart Formatting**: Auto-detect currency, percentage, numbers
-- **Trend Indicators**: Animated arrows with trend analysis
-
-### 🎨 Modern UX Improvements
-- **Toast System**: Beautiful notifications with Sonner
-- **Loading States**: Enhanced skeleton animations
-- **Error Boundaries**: Graceful error handling throughout
-- **Micro-interactions**: Subtle animations for better UX
-
-## 🚀 Core Features
+## 🚀 Advanced Features
 
 ### 🎛️ Interactive Grid Layout
 - **Drag & Drop**: Rearrange dashboard widgets by dragging
@@ -66,38 +40,18 @@ An enterprise-grade dashboard built with **React 19**, **Vite**, and **shadcn/ui
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 20.19.0 or higher
-- Google Gemini API key (optional for AI features)
-
-### Installation & Setup
-
 ```bash
-# 1. Install dependencies
+# Install dependencies
 npm install
 
-# 2. Set up environment (optional for AI features)
-cp .env.example .env
-# Add your Gemini API key to .env file
-
-# 3. Start development (frontend only)
+# Start development server
 npm run dev
 
-# OR start with full AI backend
-npm run dev:full
-
-# 4. Build for production
+# Build for production
 npm run build
 ```
 
-**URLs:**
-- Frontend: `http://localhost:5173`
-- AI Backend: `http://localhost:3001` (when running dev:full)
-
-### Google Gemini Setup (Optional)
-1. Get API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Add to `.env`: `GEMINI_API_KEY=your_api_key_here`
-3. Restart the server
+Visit: `http://localhost:5173`
 
 ## 📁 Clean Project Structure
 

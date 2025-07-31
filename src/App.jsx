@@ -1,31 +1,22 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { motion } from 'framer-motion';
 import { ThemeProvider } from './context/ThemeContext';
-import { Toaster } from 'sonner';
+import { Toaster } from './components/ui/toast';
 import { Button } from './components/ui/button';
 import { DarkModeToggle } from './components/DarkModeToggle';
-import { AdvancedDateRangePicker, SmartInsightsModal, CommandPalette } from './components/advanced';
-import { toast } from 'sonner';
+import { AdvancedDateRangePicker } from './components/advanced/date-range-picker';
+import { SmartInsightsModal } from './components/advanced/smart-insights-modal';
 
 // Import dashboard components
 import MetricCard from './components/MetricCard';
+import RevenueLineChart from './components/LineChart';
+import ChannelBarChart from './components/BarChart';
+import UserRoleDonutChart from './components/DonutChart';
 import DataTable from './components/DataTable';
-import ErrorBoundary from './components/ErrorBoundary';
-
-// Professional Chart Components
-import OverviewChart from './components/OverviewChart';
-import RevenueChart from './components/RevenueChart';
-import SentimentTrendChart from './components/SentimentTrendChart';
-import WeeklyWorkloadChart from './components/WeeklyWorkloadChart';
-import DepartmentPieChart from './components/DepartmentPieChart';
-
-// Test chart to verify Recharts is working
-import TestChart from './components/TestChart';
 
 import { 
   DollarSign, 
-  // IndianRupee,
   Users, 
   TrendingUp, 
   BarChart2,
@@ -50,70 +41,17 @@ const iconMap = {
   BarChart2
 };
 
-// Professional responsive layout configuration with proper heights
-const getDefaultLayouts = () => ({
-  lg: [
-    { i: 'metric-0', x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-    { i: 'test-chart', x: 0, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
-    { i: 'overview-chart', x: 6, y: 2, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'revenue-chart', x: 0, y: 6, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'sentiment-chart', x: 0, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'workload-chart', x: 4, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'department-chart', x: 8, y: 12, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'data-table', x: 0, y: 18, w: 12, h: 8, minW: 6, minH: 6 }
-  ],
-  md: [
-    { i: 'metric-0', x: 0, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-1', x: 5, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-2', x: 0, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-3', x: 5, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
-    { i: 'overview-chart', x: 0, y: 4, w: 10, h: 6, minW: 6, minH: 5 },
-    { i: 'revenue-chart', x: 0, y: 10, w: 10, h: 6, minW: 6, minH: 5 },
-    { i: 'sentiment-chart', x: 0, y: 16, w: 5, h: 6, minW: 4, minH: 5 },
-    { i: 'workload-chart', x: 5, y: 16, w: 5, h: 6, minW: 4, minH: 5 },
-    { i: 'department-chart', x: 0, y: 22, w: 5, h: 6, minW: 4, minH: 5 },
-    { i: 'data-table', x: 5, y: 22, w: 5, h: 8, minW: 4, minH: 6 }
-  ],
-  sm: [
-    { i: 'metric-0', x: 0, y: 0, w: 6, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-1', x: 0, y: 2, w: 6, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-2', x: 0, y: 4, w: 6, h: 2, minW: 3, minH: 2 },
-    { i: 'metric-3', x: 0, y: 6, w: 6, h: 2, minW: 3, minH: 2 },
-    { i: 'overview-chart', x: 0, y: 8, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'revenue-chart', x: 0, y: 14, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'sentiment-chart', x: 0, y: 20, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'workload-chart', x: 0, y: 26, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'department-chart', x: 0, y: 32, w: 6, h: 6, minW: 4, minH: 5 },
-    { i: 'data-table', x: 0, y: 38, w: 6, h: 8, minW: 4, minH: 6 }
-  ],
-  xs: [
-    { i: 'metric-0', x: 0, y: 0, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 0, y: 2, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 4, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 0, y: 6, w: 4, h: 2, minW: 2, minH: 2 },
-    { i: 'overview-chart', x: 0, y: 8, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'revenue-chart', x: 0, y: 14, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'sentiment-chart', x: 0, y: 20, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'workload-chart', x: 0, y: 26, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'department-chart', x: 0, y: 32, w: 4, h: 6, minW: 3, minH: 5 },
-    { i: 'data-table', x: 0, y: 38, w: 4, h: 8, minW: 3, minH: 6 }
-  ],
-  xxs: [
-    { i: 'metric-0', x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-1', x: 0, y: 2, w: 2, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-2', x: 0, y: 4, w: 2, h: 2, minW: 2, minH: 2 },
-    { i: 'metric-3', x: 0, y: 6, w: 2, h: 2, minW: 2, minH: 2 },
-    { i: 'overview-chart', x: 0, y: 8, w: 2, h: 6, minW: 2, minH: 5 },
-    { i: 'revenue-chart', x: 0, y: 14, w: 2, h: 6, minW: 2, minH: 5 },
-    { i: 'sentiment-chart', x: 0, y: 20, w: 2, h: 6, minW: 2, minH: 5 },
-    { i: 'workload-chart', x: 0, y: 26, w: 2, h: 6, minW: 2, minH: 5 },
-    { i: 'department-chart', x: 0, y: 32, w: 2, h: 6, minW: 2, minH: 5 },
-    { i: 'data-table', x: 0, y: 38, w: 2, h: 8, minW: 2, minH: 6 }
-  ]
-});
+// Default layout configuration
+const getDefaultLayout = () => [
+  { i: 'metric-0', x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+  { i: 'metric-1', x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+  { i: 'metric-2', x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+  { i: 'metric-3', x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
+  { i: 'revenue-chart', x: 0, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
+  { i: 'channel-chart', x: 6, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
+  { i: 'donut-chart', x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3 },
+  { i: 'data-table', x: 4, y: 6, w: 8, h: 4, minW: 6, minH: 3 }
+];
 
 function App() {
   const [dateRange, setDateRange] = useState(getDefaultDateRange());
@@ -123,7 +61,7 @@ function App() {
   const [isInsightsModalOpen, setIsInsightsModalOpen] = useState(false);
   const [layouts, setLayouts] = useState(() => {
     const savedLayouts = localStorage.getItem('dashboard-layouts');
-    return savedLayouts ? JSON.parse(savedLayouts) : getDefaultLayouts();
+    return savedLayouts ? JSON.parse(savedLayouts) : { lg: getDefaultLayout() };
   });
 
   // Use real-time updates hook
@@ -146,16 +84,8 @@ function App() {
     metrics: realtimeData.metrics || filteredData.metrics
   };
 
-  // Debug: Log merged data structure
-  // Debug merged data in development only
-  if (import.meta.env.DEV) {
-    console.log('App mergedData:', mergedData);
-  }
-
   const handleRefresh = async () => {
     setLoading(true);
-    toast.loading('Refreshing dashboard data...', { id: 'refresh' });
-    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
@@ -175,10 +105,9 @@ function App() {
     }));
     
     setLoading(false);
-    toast.success('Dashboard data refreshed successfully!', { id: 'refresh' });
   };
 
-  const handleLayoutChange = (_, layouts) => {
+  const handleLayoutChange = (layout, layouts) => {
     setLayouts(layouts);
     localStorage.setItem('dashboard-layouts', JSON.stringify(layouts));
   };
@@ -188,14 +117,9 @@ function App() {
   };
 
   const resetLayout = () => {
-    const defaultLayouts = getDefaultLayouts();
+    const defaultLayouts = { lg: getDefaultLayout() };
     setLayouts(defaultLayouts);
     localStorage.setItem('dashboard-layouts', JSON.stringify(defaultLayouts));
-    toast.success('Layout reset to default');
-  };
-
-  const handleGenerateInsights = () => {
-    setIsInsightsModalOpen(true);
   };
 
   return (
@@ -214,101 +138,90 @@ function App() {
           transition={{ duration: 0.3 }}
         >
           <div className="container mx-auto px-4 py-4">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">ADmyBRAND Insights</h1>
-                <p className="text-sm lg:text-base text-muted-foreground">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">ADmyBRAND Insights</h1>
+                <p className="text-muted-foreground">
                   Advanced analytics dashboard with AI-powered insights
                 </p>
               </div>
               
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
-                {/* Top row - Date picker and status */}
-                <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
-                  <AdvancedDateRangePicker 
-                    dateRange={dateRange}
-                    onDateChange={handleDateChange}
-                  />
+              <div className="flex items-center gap-3 flex-wrap">
+                {/* Date Range Picker */}
+                <AdvancedDateRangePicker 
+                  dateRange={dateRange}
+                  onDateChange={handleDateChange}
+                />
 
-                  {/* Real-time status indicator */}
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
-                    {isUpdating ? (
-                      <WifiOff className="h-3 w-3 animate-pulse text-orange-500" />
-                    ) : (
-                      <Wifi className="h-3 w-3 text-green-500" />
-                    )}
-                    <span className="hidden sm:inline">
-                      {isUpdating ? 'Updating...' : `Updated ${realtimeLastUpdated.toLocaleTimeString()}`}
-                    </span>
-                    <span className="sm:hidden">
-                      {isUpdating ? 'Updating...' : 'Live'}
-                    </span>
-                  </div>
+                {/* Real-time status indicator */}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  {isUpdating ? (
+                    <WifiOff className="h-3 w-3 animate-pulse" />
+                  ) : (
+                    <Wifi className="h-3 w-3 text-green-500" />
+                  )}
+                  <span>
+                    {isUpdating ? 'Updating...' : `Updated ${realtimeLastUpdated.toLocaleTimeString()}`}
+                  </span>
                 </div>
                 
-                {/* Bottom row - Action buttons */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  {/* AI Insights Button */}
-                  <Button
-                    onClick={handleGenerateInsights}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300 hover:from-purple-500/20 hover:to-blue-500/20"
-                  >
-                    <Brain className="h-4 w-4" />
-                    <span className="hidden sm:inline">🧠 Generate Insights</span>
-                    <span className="sm:hidden">🧠 AI</span>
-                  </Button>
-                  
-                  {/* Refresh Button */}
-                  <Button
-                    onClick={() => {
-                      handleRefresh();
-                      manualUpdate();
-                    }}
-                    variant="outline"
-                    size="sm"
-                    disabled={loading || isUpdating}
-                    className="flex items-center gap-2"
-                  >
-                    <RefreshCw className={`h-4 w-4 ${(loading || isUpdating) ? 'animate-spin' : ''}`} />
-                    <span className="hidden sm:inline">Refresh</span>
-                  </Button>
+                {/* AI Insights Button */}
+                <Button
+                  onClick={() => setIsInsightsModalOpen(true)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300 hover:from-purple-500/20 hover:to-blue-500/20"
+                >
+                  <Brain className="h-4 w-4" />
+                  🧠 Generate Insights
+                </Button>
+                
+                {/* Refresh Button */}
+                <Button
+                  onClick={() => {
+                    handleRefresh();
+                    manualUpdate();
+                  }}
+                  variant="outline"
+                  size="sm"
+                  disabled={loading || isUpdating}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className={`h-4 w-4 ${(loading || isUpdating) ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
 
-                  {/* Reset Layout Button */}
-                  <Button
-                    onClick={resetLayout}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2"
-                  >
-                    <GripVertical className="h-4 w-4" />
-                    <span className="hidden sm:inline">Reset Layout</span>
-                  </Button>
-                  
-                  <DarkModeToggle />
-                </div>
+                {/* Reset Layout Button */}
+                <Button
+                  onClick={resetLayout}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <GripVertical className="h-4 w-4" />
+                  Reset Layout
+                </Button>
+                
+                <DarkModeToggle />
               </div>
             </div>
           </div>
         </motion.header>
 
         {/* Main Content with Grid Layout */}
-        <main className="relative container mx-auto px-4 py-6 lg:py-8">
+        <main className="relative container mx-auto px-4 py-8">
           <ResponsiveGridLayout
             className="layout"
             layouts={layouts}
             onLayoutChange={handleLayoutChange}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-            rowHeight={80}
+            rowHeight={60}
             isDraggable={true}
             isResizable={true}
             margin={[16, 16]}
-            containerPadding={[16, 16]}
+            containerPadding={[0, 0]}
             useCSSTransforms={true}
-            compactType="vertical"
-            preventCollision={false}
           >
             {/* Metric Cards */}
             {mergedData.metrics.map((metric, index) => {
@@ -330,75 +243,39 @@ function App() {
               );
             })}
 
-            {/* Test Chart to verify Recharts is working */}
-            <div key="test-chart" className="grid-item">
-              <TestChart />
-            </div>
-
-            {/* Professional Chart Components */}
-            <div key="overview-chart" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <OverviewChart 
-                  data={mergedData.overviewData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
-            </div>
-
+            {/* Revenue Chart */}
             <div key="revenue-chart" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <RevenueChart 
-                  data={mergedData.revenueData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
+              <RevenueLineChart 
+                data={mergedData.revenueData} 
+                loading={loading}
+              />
             </div>
 
-            <div key="sentiment-chart" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <SentimentTrendChart 
-                  data={mergedData.sentimentData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
+            {/* Channel Chart */}
+            <div key="channel-chart" className="grid-item">
+              <ChannelBarChart 
+                data={mergedData.channelData} 
+                loading={loading}
+              />
             </div>
 
-            <div key="workload-chart" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <WeeklyWorkloadChart 
-                  data={mergedData.workloadData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
-            </div>
-
-            <div key="department-chart" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <DepartmentPieChart 
-                  data={mergedData.departmentData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
+            {/* Donut Chart */}
+            <div key="donut-chart" className="grid-item">
+              <UserRoleDonutChart 
+                data={mergedData.userRoles} 
+                loading={loading}
+              />
             </div>
 
             {/* Data Table */}
             <div key="data-table" className="grid-item">
-              <ErrorBoundary onRetry={handleRefresh}>
-                <DataTable 
-                  data={mergedData.tableData} 
-                  loading={loading}
-                />
-              </ErrorBoundary>
+              <DataTable 
+                data={mergedData.tableData} 
+                loading={loading}
+              />
             </div>
           </ResponsiveGridLayout>
         </main>
-
-        {/* Command Palette */}
-        <CommandPalette
-          onGenerateInsights={handleGenerateInsights}
-          onResetLayout={resetLayout}
-          onRefreshData={handleRefresh}
-        />
 
         {/* AI Smart Insights Modal */}
         <SmartInsightsModal
@@ -408,7 +285,7 @@ function App() {
         />
         
         {/* Toast Notifications */}
-        <Toaster richColors position="top-right" />
+        <Toaster />
       </div>
     </ThemeProvider>
   );

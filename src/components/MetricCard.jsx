@@ -1,12 +1,14 @@
-
+import React from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
-import {
-  Sparkles,
-  ArrowUpIcon,
-  ArrowDownIcon
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Sparkles, 
+  ArrowUpIcon, 
+  ArrowDownIcon 
 } from "lucide-react";
 import { cn } from "../utils/cn";
 
@@ -53,9 +55,18 @@ export default function MetricCard({
     }
   }
 
-
+  const getGradientClass = (title) => {
+    switch (title.toLowerCase()) {
+      case 'revenue': return 'gradient-primary';
+      case 'users': return 'gradient-success';
+      case 'conversion rate': return 'gradient-secondary';
+      case 'growth %': return 'gradient-warning';
+      default: return 'gradient-primary';
+    }
+  };
 
   const colors = getCardColors();
+  const gradientClass = getGradientClass(title);
   const changeColor = isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
   const changeBgColor = isPositive 
     ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
@@ -88,10 +99,9 @@ export default function MetricCard({
         transition: { type: "spring", stiffness: 400, damping: 10 }
       }}
       whileTap={{ scale: 0.98 }}
-      className="h-full"
     >
       <Card className={cn(
-        "relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group h-full flex flex-col",
+        "relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group",
         colors.border
       )}>
         {/* Enhanced gradient background */}
@@ -136,14 +146,14 @@ export default function MetricCard({
           </motion.div>
         </CardHeader>
       
-        <CardContent className="relative z-10 flex-1 flex flex-col justify-center">
+        <CardContent className="relative z-10">
           <motion.div 
             className="text-2xl font-bold mb-3"
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
           >
-            {unit === '₹' && unit}
+            {unit === '$' && unit}
             <CountUp
               start={previousValue}
               end={value}
@@ -156,7 +166,7 @@ export default function MetricCard({
                 return c * ((t = t / d - 1) * t * t + 1) + b
               }}
             />
-            {unit !== '₹' && unit}
+            {unit !== '$' && unit}
           </motion.div>
         
           {growth !== undefined && (

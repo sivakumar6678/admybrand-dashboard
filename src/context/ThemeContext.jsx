@@ -1,14 +1,6 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const ThemeContext = createContext();
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
@@ -49,17 +41,12 @@ export const ThemeProvider = ({ children }) => {
     setTheme(prev => prev === "dark" ? "light" : "dark");
   };
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark");
-  };
-
   return (
     <ThemeContext.Provider value={{ 
       darkMode, 
       theme, 
       setTheme, 
-      toggleDarkMode,
-      toggleTheme 
+      toggleDarkMode 
     }}>
       {children}
     </ThemeContext.Provider>

@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Table, 
   TableBody, 
@@ -13,28 +13,39 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import { Skeleton } from "./ui/skeleton";
+import { Badge } from "./ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "./ui/dropdown-menu";
-import {
-  ChevronLeft,
-  ChevronRight,
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ChevronsLeft, 
+  ChevronsRight,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
   Download,
+  FileText,
   Search,
   MoreHorizontal,
   Eye,
   Edit,
   Trash2,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Filter,
+  X
 } from "lucide-react";
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import Papa from 'papaparse';
 import { useToast } from "../hooks/useToast";
+import { cn } from "../utils/cn";
 
 const RoleBadge = ({ role }) => {
   const variants = {
@@ -66,26 +77,15 @@ const StatusBadge = ({ status }) => (
   </div>
 )
 
-export default function DataTable({ data = [], loading = false }) {
+export default function DataTable({ data, loading = false }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedRows, setSelectedRows] = useState(new Set());
   const { toast } = useToast();
-
-  // Debug table data in development only
-  if (import.meta.env.DEV) {
-    console.log('DataTable data:', { 
-      data, 
-      loading, 
-      isArray: Array.isArray(data), 
-      length: data?.length || 0,
-      firstItem: data?.[0] || null 
-    });
-  }
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -165,7 +165,27 @@ export default function DataTable({ data = [], loading = false }) {
       <ChevronDown className="h-4 w-4" />
   }
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text('User Analytics Report', 20, 20);
+    
+    const tableData = sortedData.map(item => [
+      item.name,
+      item.email,
+      item.role,
+      item.status,
+      item.lastLogin,
+      `$${item.revenue.toLocaleString()}`
+    ]);
 
+    doc.autoTable({
+      head: [['Name', 'Email', 'Role', 'Status', 'Last Login', 'Revenue']],
+      body: tableData,
+      startY: 30,
+    });
+
+    doc.save('analytics-report.pdf');
+  };
 
   const exportToCSV = () => {
     const csvData = selectedRows.size > 0 
@@ -189,40 +209,20 @@ export default function DataTable({ data = [], loading = false }) {
     })
   };
 
-  if (loading || !data || data.length === 0) {
+  if (loading) {
     return (
-      <Card className="h-full flex flex-col">
-        <CardHeader className="flex-shrink-0 pb-3">
-          <div>
-            <CardTitle className="text-xl font-bold">User Management</CardTitle>
-            <CardDescription className="mt-1">
-              Loading user data and performance metrics...
-            </CardDescription>
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>User Data</CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 p-4 pt-0">
-          <div className="space-y-6 h-full">
-            {/* Filter skeleton */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Skeleton className="h-10 flex-1" />
-              <Skeleton className="h-10 w-32" />
-              <Skeleton className="h-10 w-32" />
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <div className="h-10 bg-muted animate-pulse rounded flex-1"></div>
+              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
+              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
             </div>
-            {/* Table skeleton */}
-            <div className="space-y-3 flex-1">
-              <Skeleton className="h-12 w-full" />
-              {[...Array(8)].map((_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
-              ))}
-            </div>
-            {/* Pagination skeleton */}
-            <div className="flex justify-between items-center py-4 border-t">
-              <Skeleton className="h-4 w-48" />
-              <div className="flex gap-2">
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-20" />
-              </div>
-            </div>
+            <div className="h-96 bg-muted animate-pulse rounded"></div>
           </div>
         </CardContent>
       </Card>
@@ -234,17 +234,11 @@ export default function DataTable({ data = [], loading = false }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
-      className="h-full"
     >
-      <Card className="h-full flex flex-col">
-        <CardHeader className="flex-shrink-0 pb-3">
+      <Card>
+        <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <CardTitle className="text-xl font-bold">User Management</CardTitle>
-              <CardDescription className="mt-1">
-                Manage users, track revenue, and monitor performance metrics
-              </CardDescription>
-            </div>
+            <CardTitle>User Data</CardTitle>
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={exportToCSV}
@@ -259,7 +253,7 @@ export default function DataTable({ data = [], loading = false }) {
           </div>
         </CardHeader>
         
-        <CardContent className="flex-1 p-4 pt-0 flex flex-col overflow-hidden">
+        <CardContent>
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
@@ -298,19 +292,18 @@ export default function DataTable({ data = [], loading = false }) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border overflow-hidden flex-1 flex flex-col min-h-0 bg-card shadow-sm">
-            <div className="overflow-auto flex-1 max-h-[900px] min-h-[650px]">
-            <Table className="relative">
-              <TableHeader className="sticky top-0 bg-muted/70 backdrop-blur-sm z-10 border-b-2 border-border">
-                <TableRow className="border-b hover:bg-transparent">
-                  <TableHead className="w-12 py-4 px-4 font-semibold">
+          <div className="rounded-md border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12">
                     <Checkbox
                       checked={selectedRows.size === paginatedData.length && paginatedData.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center gap-2">
@@ -319,7 +312,7 @@ export default function DataTable({ data = [], loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('email')}
                   >
                     <div className="flex items-center gap-2">
@@ -328,7 +321,7 @@ export default function DataTable({ data = [], loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('role')}
                   >
                     <div className="flex items-center gap-2">
@@ -337,7 +330,7 @@ export default function DataTable({ data = [], loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('status')}
                   >
                     <div className="flex items-center gap-2">
@@ -346,7 +339,7 @@ export default function DataTable({ data = [], loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
+                    className="cursor-pointer hover:bg-muted/50"
                     onClick={() => handleSort('lastLogin')}
                   >
                     <div className="flex items-center gap-2">
@@ -355,15 +348,15 @@ export default function DataTable({ data = [], loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold text-right"
+                    className="cursor-pointer hover:bg-muted/50 text-right"
                     onClick={() => handleSort('revenue')}
                   >
                     <div className="flex items-center justify-end gap-2">
-                      Revenue (₹)
+                      Revenue
                       <SortIcon column="revenue" />
                     </div>
                   </TableHead>
-                  <TableHead className="w-12 py-4 px-4 font-semibold">Actions</TableHead>
+                  <TableHead className="w-12">Actions</TableHead>
               </TableRow>
             </TableHeader>
               <TableBody>
@@ -373,27 +366,27 @@ export default function DataTable({ data = [], loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-muted/50 hover:shadow-sm transition-all duration-200 even:bg-muted/20 group border-b border-border/30"
+                    className="hover:bg-muted/50"
                   >
-                    <TableCell className="py-5 px-4">
+                    <TableCell>
                       <Checkbox
                         checked={selectedRows.has(user.id)}
                         onCheckedChange={(checked) => handleSelectRow(user.id, checked)}
                       />
                     </TableCell>
-                    <TableCell className="font-semibold py-5 px-4 text-foreground">{user.name}</TableCell>
-                    <TableCell className="py-5 px-4 text-muted-foreground">{user.email}</TableCell>
-                    <TableCell className="py-5 px-4">
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell className="py-5 px-4">
+                    <TableCell>
                       <StatusBadge status={user.status} />
                     </TableCell>
-                    <TableCell className="py-5 px-4 text-muted-foreground">{user.lastLogin}</TableCell>
-                    <TableCell className="text-right font-semibold py-5 px-4 text-foreground">
-                      ₹{user.revenue.toLocaleString()}
+                    <TableCell>{user.lastLogin}</TableCell>
+                    <TableCell className="text-right font-medium">
+                      ${user.revenue.toLocaleString()}
                     </TableCell>
-                    <TableCell className="py-4 px-4">
+                    <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -420,61 +413,34 @@ export default function DataTable({ data = [], loading = false }) {
                 ))}
               </TableBody>
             </Table>
-            </div>
           </div>
 
           {/* Pagination */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-2 py-6 px-2 border-t bg-muted/20">
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-muted-foreground font-medium">
-                Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
-                {Math.min(currentPage * itemsPerPage, sortedData.length)} of{' '}
-                <span className="font-semibold">{sortedData.length}</span> results
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">Rows per page:</span>
-                <Select value={itemsPerPage.toString()} onValueChange={(value) => {
-                  setItemsPerPage(Number(value));
-                  setCurrentPage(1);
-                }}>
-                  <SelectTrigger className="w-20 h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="15">15</SelectItem>
-                    <SelectItem value="25">25</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="flex items-center justify-between space-x-2 py-4">
+            <div className="text-sm text-muted-foreground">
+              Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
+              {Math.min(currentPage * itemsPerPage, sortedData.length)} of{' '}
+              {sortedData.length} results
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-muted-foreground">
-                Page {currentPage} of {totalPages}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </CardContent>
