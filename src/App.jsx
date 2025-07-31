@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { motion } from 'framer-motion';
 import { ThemeProvider } from './context/ThemeContext';
-import { Toaster } from './components/ui/toast';
+import { Toaster } from 'sonner';
 import { Button } from './components/ui/button';
 import { DarkModeToggle } from './components/DarkModeToggle';
-import { AdvancedDateRangePicker } from './components/advanced/date-range-picker';
-import { SmartInsightsModal } from './components/advanced/smart-insights-modal';
+import { AdvancedDateRangePicker, SmartInsightsModal, CommandPalette } from './components/advanced';
+import { toast } from 'sonner';
 
 // Import dashboard components
 import MetricCard from './components/MetricCard';
@@ -17,6 +17,7 @@ import DataTable from './components/DataTable';
 
 import { 
   DollarSign, 
+  // IndianRupee,
   Users, 
   TrendingUp, 
   BarChart2,
@@ -41,17 +42,59 @@ const iconMap = {
   BarChart2
 };
 
-// Default layout configuration
-const getDefaultLayout = () => [
-  { i: 'metric-0', x: 0, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-  { i: 'metric-1', x: 3, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-  { i: 'metric-2', x: 6, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-  { i: 'metric-3', x: 9, y: 0, w: 3, h: 2, minW: 2, minH: 2 },
-  { i: 'revenue-chart', x: 0, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
-  { i: 'channel-chart', x: 6, y: 2, w: 6, h: 4, minW: 4, minH: 3 },
-  { i: 'donut-chart', x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3 },
-  { i: 'data-table', x: 4, y: 6, w: 8, h: 4, minW: 6, minH: 3 }
-];
+// Enhanced responsive layout configuration
+const getDefaultLayouts = () => ({
+  lg: [
+    { i: 'metric-0', x: 0, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
+    { i: 'metric-1', x: 3, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
+    { i: 'metric-2', x: 6, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
+    { i: 'metric-3', x: 9, y: 0, w: 3, h: 3, minW: 2, minH: 2 },
+    { i: 'revenue-chart', x: 0, y: 3, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'channel-chart', x: 6, y: 3, w: 6, h: 6, minW: 4, minH: 5 },
+    { i: 'donut-chart', x: 0, y: 9, w: 4, h: 6, minW: 3, minH: 5 },
+    { i: 'data-table', x: 4, y: 9, w: 8, h: 6, minW: 6, minH: 5 }
+  ],
+  md: [
+    { i: 'metric-0', x: 0, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-1', x: 5, y: 0, w: 5, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-2', x: 0, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-3', x: 5, y: 2, w: 5, h: 2, minW: 3, minH: 2 },
+    { i: 'revenue-chart', x: 0, y: 4, w: 10, h: 5, minW: 6, minH: 4 },
+    { i: 'channel-chart', x: 0, y: 9, w: 10, h: 5, minW: 6, minH: 4 },
+    { i: 'donut-chart', x: 0, y: 14, w: 5, h: 5, minW: 4, minH: 4 },
+    { i: 'data-table', x: 5, y: 14, w: 5, h: 5, minW: 4, minH: 4 }
+  ],
+  sm: [
+    { i: 'metric-0', x: 0, y: 0, w: 6, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-1', x: 0, y: 2, w: 6, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-2', x: 0, y: 4, w: 6, h: 2, minW: 3, minH: 2 },
+    { i: 'metric-3', x: 0, y: 6, w: 6, h: 2, minW: 3, minH: 2 },
+    { i: 'revenue-chart', x: 0, y: 8, w: 6, h: 5, minW: 4, minH: 4 },
+    { i: 'channel-chart', x: 0, y: 13, w: 6, h: 5, minW: 4, minH: 4 },
+    { i: 'donut-chart', x: 0, y: 18, w: 6, h: 5, minW: 4, minH: 4 },
+    { i: 'data-table', x: 0, y: 23, w: 6, h: 6, minW: 4, minH: 5 }
+  ],
+  xs: [
+    { i: 'metric-0', x: 0, y: 0, w: 4, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-1', x: 0, y: 2, w: 4, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-2', x: 0, y: 4, w: 4, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-3', x: 0, y: 6, w: 4, h: 2, minW: 2, minH: 2 },
+    { i: 'revenue-chart', x: 0, y: 8, w: 4, h: 5, minW: 3, minH: 4 },
+    { i: 'channel-chart', x: 0, y: 13, w: 4, h: 5, minW: 3, minH: 4 },
+    { i: 'donut-chart', x: 0, y: 18, w: 4, h: 5, minW: 3, minH: 4 },
+    { i: 'data-table', x: 0, y: 23, w: 4, h: 6, minW: 3, minH: 5 }
+  ],
+  xxs: [
+    { i: 'metric-0', x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-1', x: 0, y: 2, w: 2, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-2', x: 0, y: 4, w: 2, h: 2, minW: 2, minH: 2 },
+    { i: 'metric-3', x: 0, y: 6, w: 2, h: 2, minW: 2, minH: 2 },
+    { i: 'revenue-chart', x: 0, y: 8, w: 2, h: 5, minW: 2, minH: 4 },
+    { i: 'channel-chart', x: 0, y: 13, w: 2, h: 5, minW: 2, minH: 4 },
+    { i: 'donut-chart', x: 0, y: 18, w: 2, h: 5, minW: 2, minH: 4 },
+    { i: 'data-table', x: 0, y: 23, w: 2, h: 6, minW: 2, minH: 5 }
+  ]
+});
 
 function App() {
   const [dateRange, setDateRange] = useState(getDefaultDateRange());
@@ -61,7 +104,7 @@ function App() {
   const [isInsightsModalOpen, setIsInsightsModalOpen] = useState(false);
   const [layouts, setLayouts] = useState(() => {
     const savedLayouts = localStorage.getItem('dashboard-layouts');
-    return savedLayouts ? JSON.parse(savedLayouts) : { lg: getDefaultLayout() };
+    return savedLayouts ? JSON.parse(savedLayouts) : getDefaultLayouts();
   });
 
   // Use real-time updates hook
@@ -86,6 +129,8 @@ function App() {
 
   const handleRefresh = async () => {
     setLoading(true);
+    toast.loading('Refreshing dashboard data...', { id: 'refresh' });
+    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
@@ -105,6 +150,7 @@ function App() {
     }));
     
     setLoading(false);
+    toast.success('Dashboard data refreshed successfully!', { id: 'refresh' });
   };
 
   const handleLayoutChange = (layout, layouts) => {
@@ -117,9 +163,14 @@ function App() {
   };
 
   const resetLayout = () => {
-    const defaultLayouts = { lg: getDefaultLayout() };
+    const defaultLayouts = getDefaultLayouts();
     setLayouts(defaultLayouts);
     localStorage.setItem('dashboard-layouts', JSON.stringify(defaultLayouts));
+    toast.success('Layout reset to default');
+  };
+
+  const handleGenerateInsights = () => {
+    setIsInsightsModalOpen(true);
   };
 
   return (
@@ -138,78 +189,87 @@ function App() {
           transition={{ duration: 0.3 }}
         >
           <div className="container mx-auto px-4 py-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h1 className="text-3xl font-bold tracking-tight">ADmyBRAND Insights</h1>
-                <p className="text-muted-foreground">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+              <div className="flex-shrink-0">
+                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">ADmyBRAND Insights</h1>
+                <p className="text-sm lg:text-base text-muted-foreground">
                   Advanced analytics dashboard with AI-powered insights
                 </p>
               </div>
               
-              <div className="flex items-center gap-3 flex-wrap">
-                {/* Date Range Picker */}
-                <AdvancedDateRangePicker 
-                  dateRange={dateRange}
-                  onDateChange={handleDateChange}
-                />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
+                {/* Top row - Date picker and status */}
+                <div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
+                  <AdvancedDateRangePicker 
+                    dateRange={dateRange}
+                    onDateChange={handleDateChange}
+                  />
 
-                {/* Real-time status indicator */}
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  {isUpdating ? (
-                    <WifiOff className="h-3 w-3 animate-pulse" />
-                  ) : (
-                    <Wifi className="h-3 w-3 text-green-500" />
-                  )}
-                  <span>
-                    {isUpdating ? 'Updating...' : `Updated ${realtimeLastUpdated.toLocaleTimeString()}`}
-                  </span>
+                  {/* Real-time status indicator */}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
+                    {isUpdating ? (
+                      <WifiOff className="h-3 w-3 animate-pulse text-orange-500" />
+                    ) : (
+                      <Wifi className="h-3 w-3 text-green-500" />
+                    )}
+                    <span className="hidden sm:inline">
+                      {isUpdating ? 'Updating...' : `Updated ${realtimeLastUpdated.toLocaleTimeString()}`}
+                    </span>
+                    <span className="sm:hidden">
+                      {isUpdating ? 'Updating...' : 'Live'}
+                    </span>
+                  </div>
                 </div>
                 
-                {/* AI Insights Button */}
-                <Button
-                  onClick={() => setIsInsightsModalOpen(true)}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300 hover:from-purple-500/20 hover:to-blue-500/20"
-                >
-                  <Brain className="h-4 w-4" />
-                  🧠 Generate Insights
-                </Button>
-                
-                {/* Refresh Button */}
-                <Button
-                  onClick={() => {
-                    handleRefresh();
-                    manualUpdate();
-                  }}
-                  variant="outline"
-                  size="sm"
-                  disabled={loading || isUpdating}
-                  className="flex items-center gap-2"
-                >
-                  <RefreshCw className={`h-4 w-4 ${(loading || isUpdating) ? 'animate-spin' : ''}`} />
-                  Refresh
-                </Button>
+                {/* Bottom row - Action buttons */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* AI Insights Button */}
+                  <Button
+                    onClick={handleGenerateInsights}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300 hover:from-purple-500/20 hover:to-blue-500/20"
+                  >
+                    <Brain className="h-4 w-4" />
+                    <span className="hidden sm:inline">🧠 Generate Insights</span>
+                    <span className="sm:hidden">🧠 AI</span>
+                  </Button>
+                  
+                  {/* Refresh Button */}
+                  <Button
+                    onClick={() => {
+                      handleRefresh();
+                      manualUpdate();
+                    }}
+                    variant="outline"
+                    size="sm"
+                    disabled={loading || isUpdating}
+                    className="flex items-center gap-2"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${(loading || isUpdating) ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </Button>
 
-                {/* Reset Layout Button */}
-                <Button
-                  onClick={resetLayout}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <GripVertical className="h-4 w-4" />
-                  Reset Layout
-                </Button>
-                
-                <DarkModeToggle />
+                  {/* Reset Layout Button */}
+                  <Button
+                    onClick={resetLayout}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <GripVertical className="h-4 w-4" />
+                    <span className="hidden sm:inline">Reset Layout</span>
+                  </Button>
+                  
+                  <DarkModeToggle />
+                </div>
               </div>
             </div>
           </div>
         </motion.header>
 
         {/* Main Content with Grid Layout */}
-        <main className="relative container mx-auto px-4 py-8">
+        <main className="relative container mx-auto px-4 py-6 lg:py-8">
           <ResponsiveGridLayout
             className="layout"
             layouts={layouts}
@@ -220,8 +280,10 @@ function App() {
             isDraggable={true}
             isResizable={true}
             margin={[16, 16]}
-            containerPadding={[0, 0]}
+            containerPadding={[16, 16]}
             useCSSTransforms={true}
+            compactType="vertical"
+            preventCollision={false}
           >
             {/* Metric Cards */}
             {mergedData.metrics.map((metric, index) => {
@@ -277,6 +339,13 @@ function App() {
           </ResponsiveGridLayout>
         </main>
 
+        {/* Command Palette */}
+        <CommandPalette
+          onGenerateInsights={handleGenerateInsights}
+          onResetLayout={resetLayout}
+          onRefreshData={handleRefresh}
+        />
+
         {/* AI Smart Insights Modal */}
         <SmartInsightsModal
           isOpen={isInsightsModalOpen}
@@ -285,7 +354,7 @@ function App() {
         />
         
         {/* Toast Notifications */}
-        <Toaster />
+        <Toaster richColors position="top-right" />
       </div>
     </ThemeProvider>
   );

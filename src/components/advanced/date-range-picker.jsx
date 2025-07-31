@@ -136,7 +136,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
                 <Button
                   key={preset.label}
                   variant="ghost"
-                  className="w-full justify-start hover:bg-accent"
+                  className="w-full justify-start"
                   onClick={() => handlePresetSelect(preset)}
                 >
                   {preset.label}
@@ -146,7 +146,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
               <div className="border-t pt-2 mt-3">
                 <Button
                   variant="ghost"
-                  className="w-full justify-start hover:bg-accent"
+                  className="w-full justify-start"
                   onClick={handleCustomRangeSelect}
                 >
                   Custom Range

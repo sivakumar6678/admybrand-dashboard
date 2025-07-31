@@ -101,6 +101,7 @@
     color: hsl(var(--foreground));
     margin: 0;
     min-height: 100vh;
+    overflow-x: hidden;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     font-variation-settings: normal;
@@ -277,30 +278,31 @@
   /* React DatePicker custom styles */
   .react-datepicker {
     font-family: inherit;
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    background-color: hsl(var(--popover));
-    color: hsl(var(--popover-foreground));
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: var(--radius) !important;
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
   }
 
   .react-datepicker__header {
-    background-color: hsl(var(--muted));
-    border-bottom: 1px solid hsl(var(--border));
-    border-radius: var(--radius) var(--radius) 0 0;
+    background-color: hsl(var(--muted)) !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+    border-radius: var(--radius) var(--radius) 0 0 !important;
   }
 
   .react-datepicker__current-month,
   .react-datepicker__day-name {
-    color: hsl(var(--foreground));
+    color: hsl(var(--foreground)) !important;
   }
 
   .react-datepicker__day {
-    color: hsl(var(--foreground));
+    color: hsl(var(--foreground)) !important;
   }
 
   .react-datepicker__day:hover {
-    background-color: hsl(var(--accent));
-    color: hsl(var(--accent-foreground));
+    background-color: hsl(var(--accent)) !important;
+    color: hsl(var(--accent-foreground)) !important;
   }
 
   .react-datepicker__day--selected {
@@ -425,27 +427,129 @@
     letter-spacing: 2px;
   }
 
-  /* Grid item styling */
+  /* Enhanced grid item styling */
   .grid-item {
     background: transparent;
     border-radius: var(--radius);
+    position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   .grid-item > * {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Ensure cards fill the grid item properly */
+  .grid-item [data-radix-aspect-ratio-wrapper],
+  .grid-item > div,
+  .card {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid-item .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Better responsive behavior for chart containers */
+  .grid-item .recharts-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 200px !important;
+  }
+
+  .grid-item .recharts-surface {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 200px !important;
+  }
+
+  /* Ensure ResponsiveContainer works properly */
+  .recharts-responsive-container {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 200px !important;
   }
 
 
 
-  /* Responsive grid adjustments */
-  @media (max-width: 768px) {
+  /* React Grid Layout base styles */
+  .react-grid-layout {
+    position: relative;
+  }
+
+  .react-grid-item {
+    transition: all 200ms ease;
+    transition-property: left, top;
+  }
+
+  .react-grid-item.cssTransforms {
+    transition-property: transform;
+  }
+
+  .react-grid-item > .react-resizable-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    background: linear-gradient(-45deg, transparent 0%, transparent 40%, hsl(var(--muted-foreground) / 0.3) 50%, hsl(var(--muted-foreground) / 0.3) 60%, transparent 70%, transparent 100%);
+  }
+
+  /* Enhanced responsive grid adjustments */
+  @media (max-width: 1200px) {
+    .react-grid-layout {
+      margin: -8px;
+    }
+    
     .react-grid-item {
       margin-bottom: 16px;
     }
-    
+  }
+
+  @media (max-width: 768px) {
+    .grid-item > * {
+      min-height: 200px;
+    }
+  }
+
+  @media (max-width: 768px) {
     .react-grid-layout {
-      margin: -8px;
+      margin: -4px;
+    }
+    
+    .react-grid-item {
+      margin-bottom: 8px;
+    }
+    
+    /* Ensure proper spacing on mobile */
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .react-grid-layout {
+      margin: -2px;
+    }
+    
+    .react-grid-item {
+      margin-bottom: 6px;
+    }
+    
+    /* Tighter spacing on very small screens */
+    .container {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
     }
   }
 

@@ -77,7 +77,7 @@ const StatusBadge = ({ status }) => (
   </div>
 )
 
-export default function DataTable({ data, loading = false }) {
+export default function DataTable({ data = [], loading = false }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -209,20 +209,40 @@ export default function DataTable({ data, loading = false }) {
     })
   };
 
-  if (loading) {
+  if (loading || !data || data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>User Data</CardTitle>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
+          <div>
+            <CardTitle className="text-xl font-bold">User Management</CardTitle>
+            <CardDescription className="mt-1">
+              Loading user data and performance metrics...
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4">
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="space-y-6 h-full">
+            {/* Filter skeleton */}
+            <div className="flex flex-col sm:flex-row gap-4">
               <div className="h-10 bg-muted animate-pulse rounded flex-1"></div>
               <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
               <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
             </div>
-            <div className="h-96 bg-muted animate-pulse rounded"></div>
+            {/* Table skeleton */}
+            <div className="space-y-3 flex-1">
+              <div className="h-12 bg-muted animate-pulse rounded"></div>
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="h-16 bg-muted/50 animate-pulse rounded"></div>
+              ))}
+            </div>
+            {/* Pagination skeleton */}
+            <div className="flex justify-between items-center py-4 border-t">
+              <div className="h-4 bg-muted animate-pulse rounded w-48"></div>
+              <div className="flex gap-2">
+                <div className="h-8 bg-muted animate-pulse rounded w-20"></div>
+                <div className="h-8 bg-muted animate-pulse rounded w-20"></div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -234,11 +254,17 @@ export default function DataTable({ data, loading = false }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
+      className="h-full"
     >
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle>User Data</CardTitle>
+            <div>
+              <CardTitle className="text-xl font-bold">User Management</CardTitle>
+              <CardDescription className="mt-1">
+                Manage users, track revenue, and monitor performance metrics
+              </CardDescription>
+            </div>
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={exportToCSV}
@@ -253,7 +279,7 @@ export default function DataTable({ data, loading = false }) {
           </div>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="flex-1 p-4 pt-0 flex flex-col overflow-hidden">
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
@@ -292,18 +318,19 @@ export default function DataTable({ data, loading = false }) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
+          <div className="rounded-md border overflow-hidden flex-1 flex flex-col min-h-0 bg-card">
+            <div className="overflow-auto flex-1 max-h-[600px] min-h-[400px]">
+            <Table className="relative">
+              <TableHeader className="sticky top-0 bg-muted/50 z-10">
+                <TableRow className="border-b hover:bg-transparent">
+                  <TableHead className="w-12 py-4 px-4 font-semibold">
                     <Checkbox
                       checked={selectedRows.size === paginatedData.length && paginatedData.length > 0}
                       onCheckedChange={handleSelectAll}
                     />
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center gap-2">
@@ -312,7 +339,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
                     onClick={() => handleSort('email')}
                   >
                     <div className="flex items-center gap-2">
@@ -321,7 +348,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
                     onClick={() => handleSort('role')}
                   >
                     <div className="flex items-center gap-2">
@@ -330,7 +357,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
                     onClick={() => handleSort('status')}
                   >
                     <div className="flex items-center gap-2">
@@ -339,7 +366,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold"
                     onClick={() => handleSort('lastLogin')}
                   >
                     <div className="flex items-center gap-2">
@@ -348,15 +375,15 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50 text-right"
+                    className="cursor-pointer hover:bg-muted/30 transition-colors py-4 px-4 font-semibold text-right"
                     onClick={() => handleSort('revenue')}
                   >
                     <div className="flex items-center justify-end gap-2">
-                      Revenue
+                      Revenue (₹)
                       <SortIcon column="revenue" />
                     </div>
                   </TableHead>
-                  <TableHead className="w-12">Actions</TableHead>
+                  <TableHead className="w-12 py-4 px-4 font-semibold">Actions</TableHead>
               </TableRow>
             </TableHeader>
               <TableBody>
@@ -366,27 +393,27 @@ export default function DataTable({ data, loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-muted/50"
+                    className="hover:bg-muted/30 transition-colors even:bg-muted/5 group"
                   >
-                    <TableCell>
+                    <TableCell className="py-4 px-4">
                       <Checkbox
                         checked={selectedRows.has(user.id)}
                         onCheckedChange={(checked) => handleSelectRow(user.id, checked)}
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>
+                    <TableCell className="font-medium py-4 px-4">{user.name}</TableCell>
+                    <TableCell className="py-4 px-4">{user.email}</TableCell>
+                    <TableCell className="py-4 px-4">
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-4 px-4">
                       <StatusBadge status={user.status} />
                     </TableCell>
-                    <TableCell>{user.lastLogin}</TableCell>
-                    <TableCell className="text-right font-medium">
-                      ${user.revenue.toLocaleString()}
+                    <TableCell className="py-4 px-4">{user.lastLogin}</TableCell>
+                    <TableCell className="text-right font-medium py-4 px-4">
+                      ₹{user.revenue.toLocaleString()}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-4 px-4">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -413,34 +440,42 @@ export default function DataTable({ data, loading = false }) {
                 ))}
               </TableBody>
             </Table>
+            </div>
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between space-x-2 py-4">
-            <div className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between space-x-2 py-6 px-2 border-t bg-muted/20">
+            <div className="text-sm text-muted-foreground font-medium">
               Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
               {Math.min(currentPage * itemsPerPage, sortedData.length)} of{' '}
-              {sortedData.length} results
+              <span className="font-semibold">{sortedData.length}</span> results
             </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>

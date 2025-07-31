@@ -4,15 +4,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 export default function RevenueLineChart({ data, loading = false }) {
-  if (loading) {
+  if (loading || !data || data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Revenue Over Time</CardTitle>
-          <CardDescription>Monthly revenue and user growth</CardDescription>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
+          <CardTitle className="text-lg">Revenue Over Time</CardTitle>
+          <CardDescription className="text-sm">Monthly revenue and user growth</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="h-[300px] w-full animate-pulse bg-muted rounded"></div>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full w-full animate-pulse bg-muted rounded"></div>
         </CardContent>
       </Card>
     );
@@ -23,32 +23,17 @@ export default function RevenueLineChart({ data, loading = false }) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
+      className="h-full"
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Revenue Trends</CardTitle>
-          <CardDescription>Monthly revenue and user growth</CardDescription>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
+          <CardTitle className="text-lg">Revenue Trends</CardTitle>
+          <CardDescription className="text-sm">Monthly revenue and user growth</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <defs>
-                <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#667eea" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#667eea" stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="usersGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4facfe" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#4facfe" stopOpacity={0}/>
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full min-h-[250px] w-full">
+            <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               
               <CartesianGrid 
                 strokeDasharray="3 3" 
@@ -81,7 +66,7 @@ export default function RevenueLineChart({ data, loading = false }) {
                   backdropFilter: 'blur(10px)'
                 }}
                 formatter={(value, name) => [
-                  name === 'revenue' ? `$${value.toLocaleString()}` : `${value.toLocaleString()} users`,
+                  name === 'revenue' ? `₹${value.toLocaleString()}` : `${value.toLocaleString()} users`,
                   name === 'revenue' ? 'Revenue' : 'Active Users'
                 ]}
                 labelStyle={{ fontWeight: 'bold', marginBottom: '8px' }}
@@ -90,46 +75,41 @@ export default function RevenueLineChart({ data, loading = false }) {
               <Line 
                 type="monotone" 
                 dataKey="revenue" 
-                stroke="url(#revenueGradient)"
-                strokeWidth={4}
+                stroke="#667eea"
+                strokeWidth={3}
                 dot={{ 
                   fill: '#667eea', 
-                  strokeWidth: 3, 
-                  r: 6,
-                  filter: 'url(#glow)'
+                  strokeWidth: 2, 
+                  r: 5
                 }}
                 activeDot={{ 
-                  r: 8, 
+                  r: 7, 
                   stroke: '#667eea', 
-                  strokeWidth: 3,
-                  fill: '#667eea',
-                  filter: 'url(#glow)'
+                  strokeWidth: 2,
+                  fill: '#ffffff'
                 }}
-                fill="url(#revenueGradient)"
               />
               
               <Line 
                 type="monotone" 
                 dataKey="users" 
-                stroke="url(#usersGradient)"
-                strokeWidth={4}
+                stroke="#4facfe"
+                strokeWidth={3}
                 dot={{ 
                   fill: '#4facfe', 
-                  strokeWidth: 3, 
-                  r: 6,
-                  filter: 'url(#glow)'
+                  strokeWidth: 2, 
+                  r: 5
                 }}
                 activeDot={{ 
-                  r: 8, 
+                  r: 7, 
                   stroke: '#4facfe', 
-                  strokeWidth: 3,
-                  fill: '#4facfe',
-                  filter: 'url(#glow)'
+                  strokeWidth: 2,
+                  fill: '#ffffff'
                 }}
-                fill="url(#usersGradient)"
               />
             </LineChart>
           </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
     </motion.div>

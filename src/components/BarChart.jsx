@@ -4,15 +4,15 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 export default function ChannelBarChart({ data, loading = false }) {
-  if (loading) {
+  if (loading || !data || data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
           <CardTitle>User Acquisition by Channel</CardTitle>
           <CardDescription>Users and conversions by marketing channel</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="h-[300px] w-full animate-pulse bg-muted rounded"></div>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full w-full animate-pulse bg-muted rounded"></div>
         </CardContent>
       </Card>
     );
@@ -23,32 +23,17 @@ export default function ChannelBarChart({ data, loading = false }) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: 0.1 }}
+      className="h-full"
     >
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
           <CardTitle>Channel Performance</CardTitle>
           <CardDescription>User acquisition by marketing channel</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full min-h-[250px] w-full">
+            <ResponsiveContainer width="100%" height="100%" minHeight={200}>
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-              <defs>
-                <linearGradient id="usersBarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f093fb" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#f5576c" stopOpacity={0.8}/>
-                </linearGradient>
-                <linearGradient id="conversionsBarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#667eea" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#764ba2" stopOpacity={0.8}/>
-                </linearGradient>
-                <filter id="barGlow">
-                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
               
               <CartesianGrid 
                 strokeDasharray="3 3" 
@@ -93,21 +78,20 @@ export default function ChannelBarChart({ data, loading = false }) {
               
               <Bar 
                 dataKey="users" 
-                fill="url(#usersBarGradient)"
-                radius={[6, 6, 0, 0]}
+                fill="#f093fb"
+                radius={[4, 4, 0, 0]}
                 name="users"
-                filter="url(#barGlow)"
               />
               
               <Bar 
                 dataKey="conversions" 
-                fill="url(#conversionsBarGradient)"
-                radius={[6, 6, 0, 0]}
+                fill="#667eea"
+                radius={[4, 4, 0, 0]}
                 name="conversions"
-                filter="url(#barGlow)"
               />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
     </motion.div>

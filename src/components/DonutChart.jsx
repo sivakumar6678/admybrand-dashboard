@@ -18,15 +18,15 @@ const GRADIENTS = [
 ];
 
 export default function UserRoleDonutChart({ data, loading = false }) {
-  if (loading) {
+  if (loading || !data || data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
           <CardTitle>User Distribution by Role</CardTitle>
           <CardDescription>Breakdown of users by their roles</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="h-[300px] w-full animate-pulse bg-muted rounded"></div>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full w-full animate-pulse bg-muted rounded"></div>
         </CardContent>
       </Card>
     );
@@ -68,30 +68,17 @@ export default function UserRoleDonutChart({ data, loading = false }) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: 0.2 }}
+      className="h-full"
     >
-      <Card>
-        <CardHeader>
+      <Card className="h-full flex flex-col">
+        <CardHeader className="flex-shrink-0 pb-3">
           <CardTitle>User Roles</CardTitle>
           <CardDescription>Distribution by user role</CardDescription>
         </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
+        <CardContent className="flex-1 p-4 pt-0">
+          <div className="h-full min-h-[250px] w-full">
+            <ResponsiveContainer width="100%" height="100%" minHeight={200}>
             <PieChart>
-              <defs>
-                {GRADIENTS.map((gradient, index) => (
-                  <linearGradient key={gradient.id} id={gradient.id} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor={gradient.colors[0]} stopOpacity={1}/>
-                    <stop offset="100%" stopColor={gradient.colors[1]} stopOpacity={0.8}/>
-                  </linearGradient>
-                ))}
-                <filter id="pieGlow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge> 
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
               
               <Pie
                 data={data}
@@ -101,12 +88,12 @@ export default function UserRoleDonutChart({ data, loading = false }) {
                 outerRadius={120}
                 paddingAngle={3}
                 dataKey="count"
-                filter="url(#pieGlow)"
+
               >
                 {data.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 
-                    fill={`url(#${GRADIENTS[index % GRADIENTS.length].id})`}
+                    fill={COLORS[index % COLORS.length]}
                     className="hover:opacity-90 transition-all duration-300 cursor-pointer"
                     stroke="rgba(255,255,255,0.2)"
                     strokeWidth={2}
@@ -139,6 +126,7 @@ export default function UserRoleDonutChart({ data, loading = false }) {
               <Legend content={<CustomLegend />} />
             </PieChart>
           </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
     </motion.div>
