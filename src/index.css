@@ -429,23 +429,165 @@
   .grid-item {
     background: transparent;
     border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .grid-item > * {
     height: 100%;
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Ensure cards fill their containers properly */
+  .grid-item .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid-item .card-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Fix for AI components that need scrolling */
+  .grid-item [class*="overflow-y-auto"] {
+    max-height: calc(100% - 2rem);
   }
 
 
 
   /* Responsive grid adjustments */
+  @media (max-width: 1200px) {
+    /* Medium screens - adjust spacing */
+    .react-grid-layout {
+      margin: -12px;
+    }
+
+    .react-grid-item {
+      margin-bottom: 12px;
+    }
+  }
+
+  @media (max-width: 996px) {
+    /* Tablet adjustments */
+    .react-grid-layout {
+      margin: -10px;
+    }
+
+    .react-grid-item {
+      margin-bottom: 10px;
+    }
+
+    /* Ensure AI components have adequate height */
+    .grid-item {
+      min-height: 180px;
+    }
+  }
+
   @media (max-width: 768px) {
+    /* Small tablet/large mobile */
     .react-grid-item {
       margin-bottom: 16px;
     }
-    
+
     .react-grid-layout {
       margin: -8px;
+    }
+
+    /* Mobile-specific adjustments for AI components */
+    .grid-item {
+      min-height: 200px;
+    }
+
+    /* Ensure proper spacing on mobile */
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    /* Improve header layout on mobile */
+    header .flex {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    header .flex-wrap {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 640px) {
+    /* Mobile phones */
+    .react-grid-layout {
+      margin: -6px;
+    }
+
+    .react-grid-item {
+      margin-bottom: 1rem;
+    }
+
+    /* Ensure components are properly sized */
+    .grid-item {
+      min-height: 160px;
+    }
+
+    /* Adjust floating button position on mobile */
+    .fixed.bottom-6.right-6 {
+      bottom: 1rem;
+      right: 1rem;
+    }
+
+    /* Improve modal sizing on mobile */
+    .modal-content {
+      margin: 0.5rem;
+      max-height: calc(100vh - 1rem);
+      width: calc(100vw - 1rem);
+    }
+
+    /* Better button sizing on mobile */
+    .flex.items-center.gap-3.flex-wrap button {
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Very small screens */
+    .react-grid-layout {
+      margin: -4px;
+    }
+
+    .react-grid-item {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Compact grid items */
+    .grid-item {
+      min-height: 140px;
+    }
+
+    /* Compact header */
+    header .container {
+      padding: 0.75rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    header p {
+      font-size: 0.875rem;
+    }
+
+    /* Smaller floating button */
+    .fixed.bottom-6.right-6 button {
+      height: 3rem;
+      width: 3rem;
     }
   }
 
@@ -473,5 +615,71 @@
     background: hsl(var(--muted-foreground) / 0.5);
   }
 
+  /* AI Component specific styles */
+  .ai-insight-item {
+    transition: all 0.2s ease;
+  }
+
+  .ai-insight-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+  }
+
+  .ai-alert-enter {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  .ai-alert-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+  }
+
+  .ai-alert-exit {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .ai-alert-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+  }
+
+  /* Floating button pulse animation */
+  .floating-ai-button {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(var(--primary), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(var(--primary), 0.6);
+    }
+  }
+
+  /* Loading skeleton improvements */
+  .skeleton-pulse {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--muted-foreground) / 0.1) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 2s infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
 
 }
