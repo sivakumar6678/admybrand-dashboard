@@ -1,8 +1,9 @@
-import React from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { 
   Tooltip,
   TooltipContent,
@@ -41,15 +42,15 @@ const AlertIcon = ({ type, className }) => {
 const getSeverityColor = (severity) => {
   switch (severity) {
     case 'critical':
-      return 'bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20';
+      return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300 border-red-500/20';
     case 'high':
-      return 'bg-orange-500/10 text-orange-700 dark:text-orange-300 border-orange-500/20';
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300 border-orange-500/20';
     case 'medium':
-      return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-300 border-yellow-500/20';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300 border-yellow-500/20';
     case 'low':
-      return 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20';
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 border-blue-500/20';
     default:
-      return 'bg-gray-500/10 text-gray-700 dark:text-gray-300 border-gray-500/20';
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300 border-gray-500/20';
   }
 };
 
@@ -145,32 +146,53 @@ const AIAlertSystem = ({ data, className }) => {
 
   if (error) {
     return (
-      <div className={cn("space-y-2", className)}>
-        <Alert variant="destructive">
-          <XCircle className="h-4 w-4" />
-          <AlertTitle>Alert System Error</AlertTitle>
-          <AlertDescription>
-            Failed to load AI alerts. {error}
-          </AlertDescription>
-        </Alert>
-      </div>
+      <Card className={cn("", className)}>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+            AI Alert System
+            <Badge variant="destructive" className="ml-2">
+              Error
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert variant="destructive">
+            <XCircle className="h-4 w-4" />
+            <AlertTitle>Alert System Error</AlertTitle>
+            <AlertDescription>
+              Failed to load AI alerts. {error}
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!hasAlerts && !isLoading) {
     return (
-      <div className={cn("space-y-2", className)}>
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between p-3 rounded-lg bg-green-500/10 border border-green-500/20"
-        >
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-            <span className="text-sm font-medium text-green-700 dark:text-green-300">
-              All systems running smoothly
-            </span>
-          </div>
+      <Card className={cn("", className)}>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+            AI Alert System
+            <Badge variant="secondary" className="ml-2 bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
+              All Clear
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-between p-3 rounded-lg bg-green-100 dark:bg-green-900/20 border border-green-500/20"
+          >
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+              <span className="text-sm font-medium text-green-800 dark:text-green-300">
+                All systems running smoothly
+              </span>
+            </div>
           
           <TooltipProvider>
             <Tooltip>
@@ -191,36 +213,36 @@ const AIAlertSystem = ({ data, className }) => {
             </Tooltip>
           </TooltipProvider>
         </motion.div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className={cn("space-y-3 h-full overflow-y-auto", className)}>
-      {/* Alert Header */}
-      {hasAlerts && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between p-3 rounded-lg bg-card border"
-        >
-          <div className="flex items-center gap-2">
-            {hasHighPriorityAlerts ? (
-              <Bell className="h-4 w-4 text-orange-500 animate-pulse" />
-            ) : (
-              <BellOff className="h-4 w-4 text-muted-foreground" />
-            )}
-            <span className="text-sm font-medium">
-              {alertCount} Active Alert{alertCount !== 1 ? 's' : ''}
-              {hasHighPriorityAlerts && (
-                <Badge variant="destructive" className="ml-2 text-xs">
-                  {highPriorityAlerts.length} High Priority
-                </Badge>
-              )}
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-2">
+    <Card className={cn("h-full", className)}>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+          {hasHighPriorityAlerts ? (
+            <Bell className="h-5 w-5 text-orange-600 dark:text-orange-400 animate-pulse" />
+          ) : (
+            <BellOff className="h-5 w-5 text-muted-foreground" />
+          )}
+          AI Alert System
+          {hasAlerts && (
+            <Badge variant={hasHighPriorityAlerts ? "destructive" : "secondary"} className="ml-2">
+              {alertCount}
+            </Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3 overflow-y-auto max-h-96">
+        {/* Alert Actions */}
+        {hasAlerts && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-end gap-2 pb-2"
+          >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -257,9 +279,8 @@ const AIAlertSystem = ({ data, className }) => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
 
       {/* Alert List */}
       <div className="space-y-2">
@@ -295,7 +316,8 @@ const AIAlertSystem = ({ data, className }) => {
           </div>
         </motion.div>
       )}
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

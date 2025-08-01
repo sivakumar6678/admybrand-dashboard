@@ -21,7 +21,7 @@ import AIInsightCard from './components/AIInsightCard';
 import NaturalLanguageQuery from './components/NaturalLanguageQuery';
 import AIAlertSystem from './components/AIAlertSystem';
 import AIFeedbackButton from './components/AIFeedbackButton';
-import ThemeValidator from './components/ThemeValidator';
+
 
 import { 
   DollarSign, 
@@ -392,8 +392,7 @@ function AppContent() {
           {/* AI Feedback Floating Button */}
           <AIFeedbackButton data={mergedData} />
 
-          {/* Theme Validator (for development/testing) */}
-          <ThemeValidator />
+
 
           {/* Toast Notifications with Theme Awareness */}
           <Toaster />

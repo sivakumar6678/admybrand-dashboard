@@ -24,9 +24,9 @@ const MetricBadge = ({ icon: Icon, label, value, trend, className }) => (
       className
     )}
   >
-    <Icon className="h-4 w-4 text-gray-600 dark:text-white transition-colors duration-300 ease-in-out" />
+    <Icon className="h-4 w-4 text-muted-foreground" />
     <div className="flex flex-col">
-      <span className="text-xs text-gray-600 dark:text-gray-300 transition-colors duration-300 ease-in-out">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
       <div className="flex items-center gap-1">
         <span className="text-sm font-medium">{value}</span>
         {trend === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
@@ -44,8 +44,7 @@ const SmartSummaryPanel = ({ data, className }) => {
     return (
       <Card
         className={cn(
-          "bg-white text-black border border-destructive/50 transition-colors duration-300 ease-in-out",
-          "dark:bg-[#1c1c1c] dark:text-white dark:border-destructive/50",
+          "border-destructive/50",
           className
         )}
       >
@@ -99,7 +98,7 @@ const SmartSummaryPanel = ({ data, className }) => {
               size="sm"
               onClick={refreshSummary}
               disabled={isLoading}
-              className="flex items-center gap-2 bg-white text-black border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 transition-colors duration-300 ease-in-out"
+              className="flex items-center gap-2"
             >
               <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")}/>
               Refresh
@@ -118,7 +117,7 @@ const SmartSummaryPanel = ({ data, className }) => {
           ) : hasSummary ? (
             <div className="space-y-4">
               <motion.p
-                className="text-lg leading-relaxed text-gray-900 dark:text-white transition-colors duration-300 ease-in-out"
+                className="text-lg leading-relaxed text-foreground"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -160,7 +159,7 @@ const SmartSummaryPanel = ({ data, className }) => {
                 )}
 
                 {summary.recommendations && (
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 transition-colors duration-300 ease-in-out dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/20">
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/20">
                     <Sparkles className="h-4 w-4 text-blue-500" />
                     <span className="text-sm font-medium">
                       {summary.recommendations} AI recommendations available
@@ -170,13 +169,13 @@ const SmartSummaryPanel = ({ data, className }) => {
               </motion.div>
 
               {summary.lastUpdated && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300 ease-in-out">
+                <p className="text-xs text-muted-foreground">
                   Last updated: {summary.lastUpdated.toLocaleTimeString()}
                 </p>
               )}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400 transition-colors duration-300 ease-in-out">
+            <div className="text-center py-8 text-muted-foreground">
               <Brain className="h-12 w-12 mx-auto mb-3 opacity-50" />
               <p>No summary available. Click refresh to generate insights.</p>
             </div>
