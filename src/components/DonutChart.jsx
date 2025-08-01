@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { ThemeContext } from "../context/ThemeContext";
 
 const COLORS = [
   '#667eea',
@@ -18,6 +19,8 @@ const GRADIENTS = [
 ];
 
 export default function UserRoleDonutChart({ data, loading = false }) {
+  const { darkMode } = useContext(ThemeContext);
+
   if (loading) {
     return (
       <Card>
@@ -36,9 +39,9 @@ export default function UserRoleDonutChart({ data, loading = false }) {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
-          <p className="text-card-foreground font-medium">{data.role}</p>
-          <p className="text-muted-foreground text-sm">
+        <div className="rounded-lg p-3 shadow-lg border bg-popover text-popover-foreground">
+          <p className="font-medium">{data.role}</p>
+          <p className="text-sm text-muted-foreground">
             {data.count.toLocaleString()} users ({data.percentage}%)
           </p>
         </div>
@@ -52,8 +55,8 @@ export default function UserRoleDonutChart({ data, loading = false }) {
       <div className="flex flex-wrap justify-center gap-4 mt-4">
         {payload.map((entry, index) => (
           <div key={index} className="flex items-center gap-2">
-            <div 
-              className="w-3 h-3 rounded-full" 
+            <div
+              className="w-3 h-3 rounded-full"
               style={{ backgroundColor: entry.color }}
             />
             <span className="text-sm text-muted-foreground">{entry.value}</span>
@@ -104,33 +107,35 @@ export default function UserRoleDonutChart({ data, loading = false }) {
                 filter="url(#pieGlow)"
               >
                 {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
+                  <Cell
+                    key={`cell-${index}`}
                     fill={`url(#${GRADIENTS[index % GRADIENTS.length].id})`}
                     className="hover:opacity-90 transition-all duration-300 cursor-pointer"
-                    stroke="rgba(255,255,255,0.2)"
+                    stroke="hsl(var(--background))"
                     strokeWidth={2}
                   />
                 ))}
               </Pie>
-              
+
               {/* Center label */}
-              <text 
-                x="50%" 
-                y="50%" 
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                className="fill-foreground text-sm font-bold"
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="text-sm font-bold"
+                fill="hsl(var(--foreground))"
               >
                 Total Users
               </text>
-              <text 
-                x="50%" 
-                y="50%" 
+              <text
+                x="50%"
+                y="50%"
                 dy={20}
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                className="fill-muted-foreground text-2xl font-black"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="text-2xl font-black"
+                fill="hsl(var(--muted-foreground))"
               >
                 {data.reduce((sum, item) => sum + item.count, 0).toLocaleString()}
               </text>

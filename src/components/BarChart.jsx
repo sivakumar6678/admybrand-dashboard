@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function ChannelBarChart({ data, loading = false }) {
+  const { darkMode } = useContext(ThemeContext);
+
   if (loading) {
     return (
       <Card>
@@ -34,31 +37,31 @@ export default function ChannelBarChart({ data, loading = false }) {
             <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
               <defs>
                 <linearGradient id="usersBarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f093fb" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#f5576c" stopOpacity={0.8}/>
+                  <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.9}/>
+                  <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0.7}/>
                 </linearGradient>
                 <linearGradient id="conversionsBarGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#667eea" stopOpacity={1}/>
-                  <stop offset="100%" stopColor="#764ba2" stopOpacity={0.8}/>
+                  <stop offset="0%" stopColor="hsl(var(--chart-2))" stopOpacity={0.9}/>
+                  <stop offset="100%" stopColor="hsl(var(--chart-2))" stopOpacity={0.7}/>
                 </linearGradient>
                 <filter id="barGlow">
                   <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                  <feMerge> 
+                  <feMerge>
                     <feMergeNode in="coloredBlur"/>
                     <feMergeNode in="SourceGraphic"/>
                   </feMerge>
                 </filter>
               </defs>
               
-              <CartesianGrid 
-                strokeDasharray="3 3" 
-                stroke="hsl(var(--border))" 
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="hsl(var(--muted-foreground))"
                 strokeOpacity={0.3}
                 vertical={false}
               />
-              
-              <XAxis 
-                dataKey="channel" 
+
+              <XAxis
+                dataKey="channel"
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12, fontWeight: 500 }}
@@ -67,28 +70,28 @@ export default function ChannelBarChart({ data, loading = false }) {
                 height={80}
                 interval={0}
               />
-              
-              <YAxis 
+
+              <YAxis
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12, fontWeight: 500 }}
                 dx={-10}
               />
-              
-              <Tooltip 
+
+              <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
+                  backgroundColor: 'hsl(var(--popover))',
                   border: '1px solid hsl(var(--border))',
                   borderRadius: '12px',
                   boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                  color: 'hsl(var(--card-foreground))',
+                  color: 'hsl(var(--popover-foreground))',
                   backdropFilter: 'blur(10px)'
                 }}
                 formatter={(value, name) => [
                   `${value.toLocaleString()}`,
                   name === 'users' ? 'Total Users' : 'Conversions'
                 ]}
-                labelStyle={{ fontWeight: 'bold', marginBottom: '8px' }}
+                labelStyle={{ fontWeight: 'bold', marginBottom: '8px', color: 'hsl(var(--popover-foreground))' }}
               />
               
               <Bar 

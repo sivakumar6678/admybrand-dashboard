@@ -19,10 +19,10 @@ import { cn } from '../utils/cn';
 
 const QueryResponse = ({ response }) => {
   const getConfidenceColor = (confidence) => {
-    if (confidence >= 90) return 'text-green-600 dark:text-green-400 bg-green-500/10 border-green-500/20';
-    if (confidence >= 80) return 'text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20';
-    if (confidence >= 70) return 'text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 border-yellow-500/20';
-    return 'text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/20';
+    if (confidence >= 90) return 'text-green-600 bg-green-500/10 border-green-500/20';
+    if (confidence >= 80) return 'text-blue-600 bg-blue-500/10 border-blue-500/20';
+    if (confidence >= 70) return 'text-yellow-600 bg-yellow-500/10 border-yellow-500/20';
+    return 'text-red-600 bg-red-500/10 border-red-500/20';
   };
 
   return (

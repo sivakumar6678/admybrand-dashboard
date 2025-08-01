@@ -20,8 +20,18 @@ export const ThemeProvider = ({ children }) => {
 
     if (isDark) {
       root.classList.add("dark");
+      root.classList.remove("light");
+      root.style.colorScheme = "dark";
     } else {
       root.classList.remove("dark");
+      root.classList.add("light");
+      root.style.colorScheme = "light";
+    }
+
+    // Update meta theme-color for mobile browsers
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', isDark ? '#1c1c1c' : '#667eea');
     }
 
     setDarkMode(isDark);

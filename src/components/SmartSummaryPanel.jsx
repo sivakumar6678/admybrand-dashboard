@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
@@ -20,8 +20,7 @@ import { cn } from '../utils/cn';
 const MetricBadge = ({ icon: Icon, label, value, trend, className }) => (
   <div
     className={cn(
-      "flex items-center gap-2 px-3 py-2 rounded-lg bg-white text-black border border-gray-300 transition-colors duration-300 ease-in-out",
-      "dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700",
+      "flex items-center gap-2 px-3 py-2 rounded-lg bg-card text-card-foreground border",
       className
     )}
   >
@@ -78,16 +77,11 @@ const SmartSummaryPanel = ({ data, className }) => {
       transition={{ duration: 0.5 }}
       className={className}
     >
-      <Card
-        className={cn(
-          "bg-white text-black border border-gray-300 transition-colors duration-300 ease-in-out h-full flex flex-col",
-          "dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700"
-        )}
-      >
+      <Card className="h-full flex flex-col">
         <CardContent className="p-6 flex-1 overflow-y-auto">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-full transition-colors duration-300 ease-in-out">
+              <div className="p-2 bg-primary/10 rounded-full">
                 <Brain className="h-6 w-6 text-primary" />
               </div>
               <div>
@@ -95,7 +89,7 @@ const SmartSummaryPanel = ({ data, className }) => {
                   AI Smart Summary
                   <Sparkles className="h-4 w-4 text-yellow-500" />
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 ease-in-out">
+                <p className="text-sm text-muted-foreground">
                   Real-time insights powered by artificial intelligence
                 </p>
               </div>

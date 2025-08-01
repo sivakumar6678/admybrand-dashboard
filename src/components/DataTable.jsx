@@ -24,16 +24,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
-  FileText,
   Search,
   MoreHorizontal,
   Eye,
   Edit,
   Trash2,
   ChevronUp,
-  ChevronDown,
-  Filter,
-  X
+  ChevronDown
 } from "lucide-react";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -43,14 +40,14 @@ import { cn } from "../utils/cn";
 
 const RoleBadge = ({ role }) => {
   const variants = {
-    Admin: "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400",
-    Manager: "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400", 
-    User: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
-    Guest: "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+    Admin: "bg-red-100 text-red-800 border-red-200",
+    Manager: "bg-blue-100 text-blue-800 border-blue-200",
+    User: "bg-green-100 text-green-800 border-green-200",
+    Guest: "bg-gray-100 text-gray-800 border-gray-200"
   };
-  
+
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[role] || variants.Guest}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${variants[role] || variants.Guest}`}>
       {role}
     </span>
   );
@@ -205,18 +202,18 @@ export default function DataTable({ data, loading = false }) {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="bg-white text-black border-gray-200 dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700 transition-colors duration-300 ease-in-out">
         <CardHeader>
           <CardTitle>User Data</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex gap-4">
-              <div className="h-10 bg-muted animate-pulse rounded flex-1"></div>
-              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
-              <div className="h-10 bg-muted animate-pulse rounded w-32"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded flex-1 transition-colors duration-300 ease-in-out"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-colors duration-300 ease-in-out"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-colors duration-300 ease-in-out"></div>
             </div>
-            <div className="h-96 bg-muted animate-pulse rounded"></div>
+            <div className="h-96 bg-gray-200 dark:bg-gray-700 animate-pulse rounded transition-colors duration-300 ease-in-out"></div>
           </div>
         </CardContent>
       </Card>
@@ -290,10 +287,10 @@ export default function DataTable({ data, loading = false }) {
           </div>
 
           {/* Table */}
-          <div className="rounded-md shadow-sm border bg-white text-black border-gray-200 dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700 overflow-hidden flex-1 min-h-[400px] transition-colors duration-300 ease-in-out">
+          <div className="rounded-md shadow-sm border bg-card text-card-foreground overflow-hidden flex-1 min-h-[400px]">
             <div className="overflow-y-auto max-h-[500px]">
               <Table className="w-full">
-              <TableHeader className="sticky top-0 bg-white text-black dark:bg-[#1c1c1c] dark:text-white z-10 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 ease-in-out">
+              <TableHeader className="sticky top-0 bg-card text-card-foreground z-10 border-b">
                 <TableRow className="hover:bg-transparent h-12">
                   <TableHead className="w-12 h-12">
                     <Checkbox
@@ -365,7 +362,7 @@ export default function DataTable({ data, loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12 min-h-[3rem] border-b border-gray-200 dark:border-gray-700"
+                    className="hover:bg-gray-50  dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12 min-h-[3rem] border-b border-gray-200 dark:border-gray-700"
                   >
                     <TableCell className="h-12 py-3">
                       <Checkbox

@@ -34,21 +34,21 @@ const FeedbackContent = ({ feedback }) => {
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'high':
-        return 'bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20';
+        return 'bg-red-500/10 text-red-700 border-red-500/20';
       case 'medium':
-        return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-300 border-yellow-500/20';
+        return 'bg-yellow-500/10 text-yellow-700 border-yellow-500/20';
       case 'low':
-        return 'bg-green-500/10 text-green-700 dark:text-green-300 border-green-500/20';
+        return 'bg-green-500/10 text-green-700 border-green-500/20';
       default:
-        return 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20';
+        return 'bg-blue-500/10 text-blue-700 border-blue-500/20';
     }
   };
 
   const getConfidenceColor = (confidence) => {
-    if (confidence >= 90) return 'text-green-600 dark:text-green-400';
-    if (confidence >= 80) return 'text-blue-600 dark:text-blue-400';
-    if (confidence >= 70) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (confidence >= 90) return 'text-green-600';
+    if (confidence >= 80) return 'text-blue-600';
+    if (confidence >= 70) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   return (

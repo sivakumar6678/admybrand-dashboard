@@ -33,16 +33,16 @@ export default function MetricCard({
     }
     if (trend === 'positive') {
       return {
-        border: 'border-green-200 dark:border-green-800 shadow-green-100/50 dark:shadow-green-900/20',
-        gradient: 'from-green-50/50 via-green-100/30 to-green-50/50 dark:from-green-950/20 dark:via-green-900/10 dark:to-green-950/20',
-        icon: 'text-green-600 dark:text-green-400'
+        border: 'border-green-200 shadow-green-100/50',
+        gradient: 'from-green-50/50 via-green-100/30 to-green-50/50',
+        icon: 'text-green-600'
       }
     }
     if (trend === 'negative') {
       return {
-        border: 'border-red-200 dark:border-red-800 shadow-red-100/50 dark:shadow-red-900/20',
-        gradient: 'from-red-50/50 via-red-100/30 to-red-50/50 dark:from-red-950/20 dark:via-red-900/10 dark:to-red-950/20',
-        icon: 'text-red-600 dark:text-red-400'
+        border: 'border-red-200 shadow-red-100/50',
+        gradient: 'from-red-50/50 via-red-100/30 to-red-50/50',
+        icon: 'text-red-600'
       }
     }
     return {
@@ -55,10 +55,10 @@ export default function MetricCard({
   // Removed unused gradient class function
 
   const colors = getCardColors();
-  const changeColor = isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
-  const changeBgColor = isPositive 
-    ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
-    : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+  const changeColor = isPositive ? 'text-green-600' : 'text-red-600';
+  const changeBgColor = isPositive
+    ? 'bg-green-50 border-green-200'
+    : 'bg-red-50 border-red-200';
 
   if (isLoading) {
     return (

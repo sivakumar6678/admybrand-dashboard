@@ -41,10 +41,10 @@ const InsightItem = ({ insight, index }) => {
   };
 
   const getConfidenceColor = (confidence) => {
-    if (confidence >= 90) return 'text-green-600 dark:text-green-400';
-    if (confidence >= 80) return 'text-blue-600 dark:text-blue-400';
-    if (confidence >= 70) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (confidence >= 90) return 'text-green-600';
+    if (confidence >= 80) return 'text-blue-600';
+    if (confidence >= 70) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const Icon = getCategoryIcon(insight.category);

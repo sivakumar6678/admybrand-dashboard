@@ -1,12 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analytics Dashboard - Heavy Design</title>
+    <meta name="theme-color" content="#667eea" />
+    <meta name="color-scheme" content="light dark" />
+    <title>ADmyBRAND Analytics - AI-Powered Dashboard</title>
+    <meta name="description" content="AI-powered analytics dashboard for Indian businesses with comprehensive dark/light mode support" />
+    
+    <!-- Theme initialization script to prevent flash -->
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.className = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
   </head>
-  <body>
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

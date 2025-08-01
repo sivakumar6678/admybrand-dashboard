@@ -21,6 +21,7 @@ import AIInsightCard from './components/AIInsightCard';
 import NaturalLanguageQuery from './components/NaturalLanguageQuery';
 import AIAlertSystem from './components/AIAlertSystem';
 import AIFeedbackButton from './components/AIFeedbackButton';
+import ThemeValidator from './components/ThemeValidator';
 
 import { 
   DollarSign, 
@@ -164,11 +165,7 @@ function AppContent() {
         
           {/* Enhanced Header with Theme Awareness */}
           <motion.header
-            className={`relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 transition-all duration-500 ${
-              darkMode
-                ? 'bg-background/95 border-border/50 shadow-lg shadow-black/10'
-                : 'bg-background/95 border-border/30 shadow-md shadow-gray-200/50'
-            }`}
+            className="relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 bg-background/95 shadow-md transition-all duration-500"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -219,11 +216,7 @@ function AppContent() {
                     onClick={() => setIsInsightsModalOpen(true)}
                     variant="outline"
                     size="sm"
-                    className={`flex items-center gap-2 transition-all duration-300 ${
-                      darkMode
-                        ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-purple-400/50 hover:from-purple-500/30 hover:to-blue-500/30 hover:border-purple-400/70'
-                        : 'bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300/60 hover:from-purple-500/20 hover:to-blue-500/20 hover:border-purple-400/80'
-                    }`}
+                    className="flex items-center gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-300/60 hover:from-purple-500/20 hover:to-blue-500/20 hover:border-purple-400/80 transition-all duration-300"
                   >
                     <motion.div
                       animate={{ rotate: [0, 10, -10, 0] }}
@@ -398,6 +391,9 @@ function AppContent() {
 
           {/* AI Feedback Floating Button */}
           <AIFeedbackButton data={mergedData} />
+
+          {/* Theme Validator (for development/testing) */}
+          <ThemeValidator />
 
           {/* Toast Notifications with Theme Awareness */}
           <Toaster />

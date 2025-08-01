@@ -58,10 +58,6 @@ export function DarkModeToggle() {
           aria-label="Toggle theme"
           className={`relative overflow-hidden group transition-all duration-500 ${
             isTransitioning ? 'animate-pulse' : 'hover:shadow-glow'
-          } ${
-            darkMode
-              ? 'border-gray-600 hover:border-gray-500'
-              : 'border-gray-300 hover:border-gray-400'
           }`}
         >
           <motion.div
@@ -91,7 +87,7 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('light')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'light' ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-300' : ''
+            theme === 'light' ? 'bg-amber-50 text-amber-700' : ''
           }`}
         >
           <Sun className="h-4 w-4 text-amber-500" />
@@ -104,7 +100,7 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('dark')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'dark' ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300' : ''
+            theme === 'dark' ? 'bg-blue-50 text-blue-700' : ''
           }`}
         >
           <Moon className="h-4 w-4 text-blue-400" />
@@ -119,7 +115,7 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('system')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'system' ? 'bg-gray-50 dark:bg-gray-950/20 text-gray-700 dark:text-gray-300' : ''
+            theme === 'system' ? 'bg-gray-50 text-gray-700' : ''
           }`}
         >
           <Monitor className="h-4 w-4 text-gray-500" />

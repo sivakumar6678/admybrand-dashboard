@@ -120,7 +120,31 @@
       stroke 0.3s ease-in-out,
       opacity 0.3s ease-in-out,
       box-shadow 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
+      transform 0.3s ease-in-out,
+      backdrop-filter 0.3s ease-in-out;
+  }
+
+  /* Prevent theme flash during initial load */
+  html.theme-loading * {
+    transition: none !important;
+  }
+
+  /* Enhanced focus styles for both themes */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    transition: outline-color 0.2s ease-in-out;
+  }
+
+  /* Better selection colors for both themes */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--primary-foreground));
+  }
+
+  ::-moz-selection {
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--primary-foreground));
   }
   
   /* Custom scrollbar */
