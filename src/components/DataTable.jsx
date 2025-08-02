@@ -202,18 +202,18 @@ export default function DataTable({ data, loading = false }) {
 
   if (loading) {
     return (
-      <Card className="bg-white text-black border-gray-200 dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700 transition-colors duration-300 ease-in-out">
+      <Card className="bg-white text-black border-gray-200 dark:bg-[#1c1c1c] dark:text-white dark:border-gray-700 transition-all duration-200 ease-in-out">
         <CardHeader>
           <CardTitle>User Data</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex gap-4">
-              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded flex-1 transition-colors duration-300 ease-in-out"></div>
-              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-colors duration-300 ease-in-out"></div>
-              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-colors duration-300 ease-in-out"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded flex-1 transition-all duration-200 ease-in-out"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-all duration-200 ease-in-out"></div>
+              <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-32 transition-all duration-200 ease-in-out"></div>
             </div>
-            <div className="h-96 bg-gray-200 dark:bg-gray-700 animate-pulse rounded transition-colors duration-300 ease-in-out"></div>
+            <div className="h-96 bg-gray-200 dark:bg-gray-700 animate-pulse rounded transition-all duration-200 ease-in-out"></div>
           </div>
         </CardContent>
       </Card>

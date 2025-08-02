@@ -115,7 +115,7 @@ function AppContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-        className="min-h-screen bg-background text-foreground antialiased relative overflow-hidden transition-colors duration-500 ease-in-out"
+        className="min-h-screen bg-background text-foreground antialiased relative overflow-hidden transition-all duration-200 ease-in-out"
       >
           {/* Enhanced Animated Background Orbs with Theme Awareness */}
           <div className="fixed inset-0 pointer-events-none">
@@ -154,7 +154,7 @@ function AppContent() {
           </div>
 
           {/* Theme-aware gradient overlay */}
-          <div className={`fixed inset-0 pointer-events-none transition-opacity duration-1000 ${
+          <div className={`fixed inset-0 pointer-events-none transition-all duration-200 ease-in-out ${
             darkMode
               ? 'bg-gradient-to-br from-slate-900/20 via-transparent to-slate-800/20'
               : 'bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30'
@@ -164,7 +164,7 @@ function AppContent() {
           <motion.header
             className="relative border-b-2 border-gray-200 dark:border-gray-700 backdrop-blur-lg
               supports-[backdrop-filter]:bg-background/80 sticky top-0 z-50 bg-background/90
-              shadow-xl hover:shadow-2xl transition-all duration-500 ease-in-out"
+              shadow-xl hover:shadow-2xl transition-all duration-200 ease-in-out"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
@@ -256,7 +256,7 @@ function AppContent() {
 
           {/* Enhanced Main Content with Theme-Aware Layout */}
           <motion.main
-            className="relative container mx-auto px-6 py-10 space-y-10 z-10 transition-all duration-500 ease-in-out"
+            className="relative container mx-auto px-6 py-10 space-y-10 z-10 transition-all duration-200 ease-in-out"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}

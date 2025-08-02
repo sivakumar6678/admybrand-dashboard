@@ -125,7 +125,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 z-50 bg-white text-black border-gray-200 dark:bg-[#1e1e1e] dark:text-white dark:border-muted border shadow-lg rounded-md transition-colors duration-300 ease-in-out" align="start">
+      <PopoverContent className="w-auto p-0 z-50 bg-white text-black border-gray-200 dark:bg-[#1e1e1e] dark:text-white dark:border-muted border shadow-lg rounded-md transition-all duration-200 ease-in-out" align="start">
         <div className="p-4">
           {!showCustomRange ? (
             <div className="space-y-2">
@@ -136,7 +136,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
                 <Button
                   key={preset.label}
                   variant="ghost"
-                  className="w-full justify-start text-black hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-accent-foreground transition-all duration-300 ease-in-out rounded-md px-4 py-2"
+                  className="w-full justify-start text-black hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-accent-foreground transition-all duration-200 ease-in-out rounded-md px-4 py-2"
                   onClick={() => handlePresetSelect(preset)}
                 >
                   {preset.label}
@@ -146,7 +146,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
               <div className="border-t pt-2 mt-3">
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-black hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-accent-foreground transition-all duration-300 ease-in-out rounded-md px-4 py-2"
+                  className="w-full justify-start text-black hover:bg-gray-100 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-accent-foreground transition-all duration-200 ease-in-out rounded-md px-4 py-2"
                   onClick={handleCustomRangeSelect}
                 >
                   Custom Range
@@ -186,7 +186,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
                     startDate={tempStartDate}
                     endDate={tempEndDate}
                     maxDate={new Date()}
-                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-white text-black dark:bg-[#1e1e1e] dark:text-white dark:border-muted transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-white text-black dark:bg-[#1e1e1e] dark:text-white dark:border-muted transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     placeholderText="Select start date"
                   />
                 </div>
@@ -203,7 +203,7 @@ export const AdvancedDateRangePicker = ({ dateRange, onDateChange, className }) 
                     endDate={tempEndDate}
                     minDate={tempStartDate}
                     maxDate={new Date()}
-                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-white text-black dark:bg-[#1e1e1e] dark:text-white dark:border-muted transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    className="w-full px-3 py-2 text-sm border border-input rounded-md bg-white text-black dark:bg-[#1e1e1e] dark:text-white dark:border-muted transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     placeholderText="Select end date"
                   />
                 </div>

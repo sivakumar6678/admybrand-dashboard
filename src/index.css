@@ -51,11 +51,11 @@
     --heavy-border-accent: 2px solid hsl(var(--primary) / 0.3);
     --heavy-border-muted: 1.5px solid hsl(var(--muted-foreground) / 0.2);
 
-    /* Smooth Transition Variables */
-    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-colors: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-    --transition-transform: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-shadow: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth Transition Variables - Optimized for faster theme switching */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-colors: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    --transition-transform: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-shadow: box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Enhanced color palette */
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -161,20 +161,20 @@
     pointer-events: auto;
   }
 
-  /* Enhanced theme transition for all elements */
+  /* Enhanced theme transition for all elements - Faster and smoother */
   *,
   *::before,
   *::after {
     transition:
-      background-color 0.5s ease-in-out,
-      border-color 0.5s ease-in-out,
-      color 0.5s ease-in-out,
-      fill 0.5s ease-in-out,
-      stroke 0.5s ease-in-out,
-      opacity 0.3s ease-in-out,
-      box-shadow 0.3s ease-in-out,
-      transform 0.3s ease-in-out,
-      backdrop-filter 0.5s ease-in-out;
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out,
+      color 0.2s ease-in-out,
+      fill 0.2s ease-in-out,
+      stroke 0.2s ease-in-out,
+      opacity 0.15s ease-in-out,
+      box-shadow 0.15s ease-in-out,
+      transform 0.15s ease-in-out,
+      backdrop-filter 0.2s ease-in-out;
   }
 
   /* Prevent theme flash during initial load */
@@ -390,6 +390,26 @@
   /* Pulse animation */
   .pulse-slow {
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Theme switching animations */
+  .animate-fadeInOut {
+    animation: fadeInOut 0.7s ease-in-out;
+  }
+
+  .animate-spin-slow {
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
   
   /* Shimmer effect */

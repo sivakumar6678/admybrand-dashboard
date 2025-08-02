@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ThemeContext } from "../context/ThemeContext";
 import { Button } from "./ui/button";
 import { Sun, Moon, Monitor } from "lucide-react";
@@ -13,7 +13,7 @@ import {
 import { useToast } from "../hooks/useToast";
 
 export function DarkModeToggle() {
-  const { theme, setTheme, darkMode, isTransitioning } = useContext(ThemeContext);
+  const { theme, setTheme, darkMode, isTransitioning, isSwitching, setLightMode, setDarkMode, setSystemMode } = useContext(ThemeContext);
   const { toast } = useToast();
 
   const getThemeIcon = () => {
@@ -28,7 +28,20 @@ export function DarkModeToggle() {
   }
 
   const handleThemeChange = (newTheme) => {
-    setTheme(newTheme);
+    // Use the appropriate theme switching function for instant animation
+    switch(newTheme) {
+      case 'light':
+        setLightMode();
+        break;
+      case 'dark':
+        setDarkMode();
+        break;
+      case 'system':
+        setSystemMode();
+        break;
+      default:
+        setTheme(newTheme);
+    }
 
     const themeNames = {
       light: 'Light Mode',
@@ -56,55 +69,140 @@ export function DarkModeToggle() {
           variant="outline"
           size="icon"
           aria-label="Toggle theme"
+          disabled={isTransitioning || isSwitching}
           className={`heavy-button relative overflow-hidden group border-2 shadow-xl backdrop-blur-md
             bg-card/80 hover:bg-card/90 border-border hover:border-primary/50
             transition-all duration-500 hover:shadow-2xl hover:scale-105 ${
-            isTransitioning ? 'animate-pulse shadow-primary/30' : 'hover:shadow-primary/20'
+            (isTransitioning || isSwitching)
+              ? 'animate-pulse shadow-primary/50 scale-110 border-primary/70 bg-primary/10'
+              : 'hover:shadow-primary/20'
           }`}
         >
-          <motion.div
-            key={theme}
-            initial={{ scale: 0, rotate: -180, opacity: 0 }}
-            animate={{ scale: 1, rotate: 0, opacity: 1 }}
-            exit={{ scale: 0, rotate: 180, opacity: 0 }}
-            transition={{
-              duration: 0.5,
-              type: "spring",
-              stiffness: 200,
-              damping: 15
-            }}
-            className="relative z-10"
-          >
-            {getThemeIcon()}
-          </motion.div>
+          <AnimatePresence mode="wait">
+            {(isTransitioning || isSwitching) ? (
+              <motion.div
+                key="loading"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="relative z-10 flex items-center justify-center"
+              >
+                {/* Professional loading animation */}
+                <div className="relative">
+                  {/* Rotating outer ring */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0"
+                  >
+                    <div className="w-5 h-5 border-2 border-primary/40 border-t-primary border-r-primary/20 rounded-full" />
+                  </motion.div>
+
+                  {/* Counter-rotating inner icon */}
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                    className="w-5 h-5 flex items-center justify-center"
+                  >
+                    {darkMode ? (
+                      <Moon className="h-3 w-3 text-primary" />
+                    ) : (
+                      <Sun className="h-3 w-3 text-primary" />
+                    )}
+                  </motion.div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={theme}
+                initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                exit={{ scale: 0, rotate: 180, opacity: 0 }}
+                transition={{
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15
+                }}
+                className="relative z-10"
+              >
+                {getThemeIcon()}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Enhanced layered background animations */}
           <motion.div
             className={`absolute inset-0 transition-opacity duration-500 ${
-              darkMode
+              (isTransitioning || isSwitching)
+                ? 'bg-gradient-to-r from-primary/20 via-blue-500/25 to-primary/20'
+                : darkMode
                 ? 'bg-gradient-to-r from-blue-500/15 via-purple-500/20 to-blue-500/15'
                 : 'bg-gradient-to-r from-amber-500/15 via-orange-500/20 to-amber-500/15'
             }`}
             initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
             animate={{
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-              scale: [1, 1.02, 1]
+              opacity: (isTransitioning || isSwitching) ? 1 : 0,
+              backgroundPosition: (isTransitioning || isSwitching)
+                ? ['0% 50%', '100% 50%', '0% 50%']
+                : ['0% 50%', '100% 50%', '0% 50%'],
+              scale: (isTransitioning || isSwitching) ? [1, 1.05, 1] : [1, 1.02, 1]
             }}
+            whileHover={{ opacity: (isTransitioning || isSwitching) ? 1 : 1 }}
             transition={{
-              backgroundPosition: { duration: 3, repeat: Infinity, ease: "linear" },
-              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              opacity: { duration: 0.2 },
+              backgroundPosition: {
+                duration: (isTransitioning || isSwitching) ? 0.8 : 2,
+                repeat: Infinity,
+                ease: "linear"
+              },
+              scale: {
+                duration: (isTransitioning || isSwitching) ? 0.6 : 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
             }}
           />
 
-          {/* Additional glow effect */}
+          {/* Enhanced glow effect for loading state */}
           <motion.div
-            className="absolute inset-0 rounded-md bg-primary/5 opacity-0 group-hover:opacity-100"
+            className={`absolute inset-0 rounded-md ${
+              (isTransitioning || isSwitching)
+                ? 'bg-primary/10'
+                : 'bg-primary/5 opacity-0 group-hover:opacity-100'
+            }`}
             animate={{
-              opacity: [0, 0.3, 0]
+              opacity: (isTransitioning || isSwitching) ? [0.5, 1, 0.5] : [0, 0.3, 0]
             }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: (isTransitioning || isSwitching) ? 0.6 : 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
           />
+
+          {/* Loading state pulse rings */}
+          {(isTransitioning || isSwitching) && (
+            <>
+              <motion.div
+                className="absolute inset-0 rounded-md border-2 border-primary/30"
+                animate={{
+                  scale: [1, 1.3, 1],
+                  opacity: [1, 0, 1]
+                }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "easeOut" }}
+              />
+              <motion.div
+                className="absolute inset-0 rounded-md border-2 border-blue-500/20"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [1, 0, 1]
+                }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "easeOut", delay: 0.2 }}
+              />
+            </>
+          )}
         </Button>
       </DropdownMenuTrigger>
 
