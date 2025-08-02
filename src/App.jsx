@@ -111,15 +111,12 @@ function AppContent() {
 
   return (
     <TooltipProvider>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={theme}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="min-h-screen bg-background text-foreground antialiased relative overflow-hidden"
-        >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        className="min-h-screen bg-background text-foreground antialiased relative overflow-hidden transition-colors duration-500 ease-in-out"
+      >
           {/* Enhanced Animated Background Orbs with Theme Awareness */}
           <div className="fixed inset-0 pointer-events-none">
             <motion.div
@@ -165,24 +162,30 @@ function AppContent() {
         
           {/* Enhanced Header with Theme Awareness */}
           <motion.header
-            className="relative border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 bg-background/95 shadow-md transition-all duration-500"
+            className="relative border-b-2 border-gray-200 dark:border-gray-700 backdrop-blur-lg
+              supports-[backdrop-filter]:bg-background/80 sticky top-0 z-50 bg-background/90
+              shadow-xl hover:shadow-2xl transition-all duration-500 ease-in-out"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           >
           <div className="container mx-auto px-6 py-6">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-xl">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">AI</span>
+              <div className="flex items-center gap-5">
+                <div className="p-4 bg-gradient-to-br from-primary/15 to-blue-500/15 rounded-2xl
+                  border-2 border-primary/20 shadow-lg backdrop-blur-sm hover:shadow-xl
+                  transition-all duration-300 hover:scale-105">
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-xl
+                    flex items-center justify-center shadow-md">
+                    <span className="text-white font-bold text-xl drop-shadow-sm">AI</span>
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600
+                    bg-clip-text text-transparent tracking-tight">
                     ADmyBRAND Analytics
                   </h1>
-                  <p className="text-muted-foreground mt-1 text-lg">
+                  <p className="text-muted-foreground mt-2 text-lg font-medium">
                     AI-powered insights for Indian businesses
                   </p>
                 </div>
@@ -253,10 +256,10 @@ function AppContent() {
 
           {/* Enhanced Main Content with Theme-Aware Layout */}
           <motion.main
-            className="relative container mx-auto px-4 py-8 space-y-8 z-10"
+            className="relative container mx-auto px-6 py-10 space-y-10 z-10 transition-all duration-500 ease-in-out"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
           >
           {/* Smart Summary Panel - Full Width */}
           <section className="w-full">
@@ -397,7 +400,6 @@ function AppContent() {
           {/* Toast Notifications with Theme Awareness */}
           <Toaster />
         </motion.div>
-      </AnimatePresence>
     </TooltipProvider>
   );
 }

@@ -62,16 +62,16 @@ export default function MetricCard({
 
   if (isLoading) {
     return (
-      <Card className="relative overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            <div className="h-4 bg-muted animate-pulse rounded w-20"></div>
+      <Card className="heavy-card relative overflow-hidden border-2 shadow-xl backdrop-blur-md bg-white/90 dark:bg-gray-900/90 rounded-2xl">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+          <CardTitle className="text-sm font-semibold">
+            <div className="h-5 bg-muted animate-pulse rounded-lg w-24"></div>
           </CardTitle>
-          <div className="h-4 w-4 bg-muted animate-pulse rounded"></div>
+          <div className="h-6 w-6 bg-muted animate-pulse rounded-lg"></div>
         </CardHeader>
-        <CardContent>
-          <div className="h-8 bg-muted animate-pulse rounded w-24 mb-2"></div>
-          <div className="h-4 bg-muted animate-pulse rounded w-16"></div>
+        <CardContent className="pt-2">
+          <div className="h-10 bg-muted animate-pulse rounded-lg w-32 mb-3"></div>
+          <div className="h-5 bg-muted animate-pulse rounded-lg w-20"></div>
         </CardContent>
       </Card>
     )
@@ -81,22 +81,26 @@ export default function MetricCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ 
-        scale: 1.02,
-        transition: { type: "spring", stiffness: 400, damping: 10 }
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+      whileHover={{
+        scale: 1.03,
+        y: -4,
+        transition: { type: "spring", stiffness: 400, damping: 15 }
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.97 }}
     >
       <Card className={cn(
-        "relative overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group",
+        "heavy-card relative overflow-hidden border-2 shadow-2xl backdrop-blur-lg bg-card/90 rounded-2xl hover:shadow-3xl transition-all duration-500 cursor-pointer group",
         colors.border
       )}>
-        {/* Enhanced gradient background */}
+        {/* Enhanced layered gradient background */}
         <div className={cn(
-          "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+          "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-700",
           colors.gradient
         )} />
+
+        {/* Additional glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         {/* Priority indicator */}
         {priority === 'high' && (
@@ -108,40 +112,40 @@ export default function MetricCard({
           <Sparkles className="h-4 w-4 text-primary animate-pulse" />
         </div>
       
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+          <div className="flex items-center gap-3">
+            <CardTitle className="text-sm font-semibold text-muted-foreground tracking-wide uppercase">
               {title}
             </CardTitle>
             {priority === 'high' && (
-              <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+              <Badge variant="secondary" className="text-xs px-2 py-1 font-semibold border shadow-sm">
                 Priority
               </Badge>
             )}
           </div>
           <motion.div
-            whileHover={{ 
+            whileHover={{
               rotate: 360,
-              scale: 1.1
+              scale: 1.2
             }}
-            transition={{ duration: 0.5, type: "spring" }}
+            transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
             className={cn(
-              "p-2 rounded-full bg-background/50 backdrop-blur-sm",
+              "p-3 rounded-xl bg-background/70 backdrop-blur-md border-2 shadow-lg hover:shadow-xl transition-all duration-300",
               colors.icon
             )}
           >
-            <div className="h-4 w-4">{icon}</div>
+            <div className="h-5 w-5">{icon}</div>
           </motion.div>
         </CardHeader>
       
-        <CardContent className="relative z-10">
+        <CardContent className="relative z-10 pt-2">
           <motion.div
-            className="text-2xl font-bold mb-3"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
+            className="text-3xl font-bold mb-4 tracking-tight"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           >
-            {(unit === '₹') && unit}
+            {(unit === '₹') && <span className="text-primary">{unit}</span>}
             <CountUp
               start={previousValue}
               end={value}
@@ -160,19 +164,19 @@ export default function MetricCard({
                 return value.toLocaleString();
               }}
             />
-            {unit !== '₹' && unit}
+            {unit !== '₹' && <span className="text-primary font-semibold">{unit}</span>}
           </motion.div>
         
           {growth !== undefined && (
-            <motion.div 
+            <motion.div
               className={cn(
-                "flex items-center text-xs rounded-full px-3 py-1.5 w-fit border",
+                "flex items-center text-xs font-semibold rounded-xl px-4 py-2 w-fit border-2 shadow-md backdrop-blur-sm",
                 changeBgColor
               )}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08, shadow: "0 8px 25px rgba(0,0,0,0.15)" }}
             >
               <motion.div
                 animate={{ 

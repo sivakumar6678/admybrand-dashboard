@@ -3,7 +3,9 @@ import { createContext, useState, useEffect, useCallback } from "react";
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'system';
     const saved = localStorage.getItem("theme");
     return saved || "system";
   });
@@ -13,36 +15,60 @@ export const ThemeProvider = ({ children }) => {
 
   const applyTheme = useCallback((isDark) => {
     const root = window.document.documentElement;
+    const body = document.body;
     setIsTransitioning(true);
 
-    // Add transition class for smooth theme switching
-    root.style.setProperty('--theme-transition', 'all 0.3s ease-in-out');
+    // Add enhanced transition classes for smooth theme switching
+    root.classList.add('theme-transitioning');
+    body.classList.add('theme-transitioning');
+
+    // Apply CSS custom properties for smooth transitions
+    root.style.setProperty('--theme-transition-duration', '0.5s');
+    root.style.setProperty('--theme-transition-timing', 'cubic-bezier(0.4, 0, 0.2, 1)');
 
     if (isDark) {
       root.classList.add("dark");
       root.classList.remove("light");
       root.style.colorScheme = "dark";
+      body.style.transition = 'background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
     } else {
       root.classList.remove("dark");
       root.classList.add("light");
       root.style.colorScheme = "light";
+      body.style.transition = 'background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
     }
 
-    // Update meta theme-color for mobile browsers
+    // Update meta theme-color for mobile browsers with enhanced colors
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', isDark ? '#1c1c1c' : '#667eea');
+      metaThemeColor.setAttribute('content', isDark ? '#0f0f0f' : '#667eea');
+    }
+
+    // Update viewport meta for better mobile experience
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) {
+      viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, viewport-fit=cover');
     }
 
     setDarkMode(isDark);
 
-    // Remove transition after animation completes
+    // Remove transition classes after animation completes
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 300);
+      root.classList.remove('theme-transitioning');
+      body.classList.remove('theme-transitioning');
+      // Clean up inline styles
+      body.style.transition = '';
+    }, 500); // Increased to match the 0.5s transition duration
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     if (theme === "system") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       applyTheme(mediaQuery.matches);
@@ -56,7 +82,7 @@ export const ThemeProvider = ({ children }) => {
     }
 
     localStorage.setItem("theme", theme);
-  }, [theme, applyTheme]);
+  }, [theme, applyTheme, mounted]);
 
   const toggleDarkMode = useCallback(() => {
     setTheme(prev => prev === "dark" ? "light" : "dark");
@@ -82,7 +108,8 @@ export const ThemeProvider = ({ children }) => {
     setLightMode,
     setDarkMode: setDarkModeTheme,
     setSystemMode,
-    isTransitioning
+    isTransitioning,
+    mounted
   };
 
   return (

@@ -20,18 +20,20 @@ import { cn } from '../utils/cn';
 const MetricBadge = ({ icon: Icon, label, value, trend, className }) => (
   <div
     className={cn(
-      "flex items-center gap-2 px-3 py-2 rounded-lg bg-card text-card-foreground border",
+      "flex items-center gap-3 px-4 py-3 rounded-xl bg-card/90 text-card-foreground border-2 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02]",
       className
     )}
   >
-    <Icon className="h-4 w-4 text-muted-foreground" />
+    <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+      <Icon className="h-5 w-5 text-primary" />
+    </div>
     <div className="flex flex-col">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-1">
-        <span className="text-sm font-medium">{value}</span>
-        {trend === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
-        {trend === 'down' && <TrendingDown className="h-3 w-3 text-red-500" />}
-        {trend === 'stable' && <Minus className="h-3 w-3 text-yellow-500" />}
+      <span className="text-xs text-muted-foreground font-medium tracking-wide uppercase">{label}</span>
+      <div className="flex items-center gap-2 mt-1">
+        <span className="text-sm font-semibold">{value}</span>
+        {trend === 'up' && <TrendingUp className="h-4 w-4 text-green-500 drop-shadow-sm" />}
+        {trend === 'down' && <TrendingDown className="h-4 w-4 text-red-500 drop-shadow-sm" />}
+        {trend === 'stable' && <Minus className="h-4 w-4 text-yellow-500 drop-shadow-sm" />}
       </div>
     </div>
   </div>
@@ -44,21 +46,24 @@ const SmartSummaryPanel = ({ data, className }) => {
     return (
       <Card
         className={cn(
-          "border-destructive/50",
+          "border-2 border-destructive/50 shadow-xl backdrop-blur-md bg-card/90 rounded-2xl",
           className
         )}
       >
-        <CardContent className="p-4">
+        <CardContent className="p-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-destructive">
-              <Brain className="h-5 w-5" />
-              <span className="font-medium">Failed to load AI summary</span>
+            <div className="flex items-center gap-3 text-destructive">
+              <div className="p-2 rounded-lg bg-destructive/10 border border-destructive/20">
+                <Brain className="h-6 w-6" />
+              </div>
+              <span className="font-semibold text-lg">Failed to load AI summary</span>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={refreshSummary}
-              className="text-destructive border-destructive/50 hover:bg-destructive/10 transition-colors duration-300 ease-in-out"
+              className="heavy-button text-destructive border-2 border-destructive/50 hover:bg-destructive/10
+                hover:shadow-lg transition-all duration-300 hover:scale-105"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Retry
@@ -73,11 +78,12 @@ const SmartSummaryPanel = ({ data, className }) => {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
       className={className}
     >
-      <Card className="h-full flex flex-col">
-        <CardContent className="p-6 flex-1 overflow-y-auto">
+      <Card className="heavy-card h-full flex flex-col border-2 shadow-2xl backdrop-blur-lg
+        bg-card/90 rounded-2xl hover:shadow-3xl transition-all duration-500">
+        <CardContent className="p-8 flex-1 overflow-y-auto">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-full">

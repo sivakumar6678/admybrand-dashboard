@@ -40,14 +40,14 @@ import { cn } from "../utils/cn";
 
 const RoleBadge = ({ role }) => {
   const variants = {
-    Admin: "bg-red-100 text-red-800 border-red-200",
-    Manager: "bg-blue-100 text-blue-800 border-blue-200",
-    User: "bg-green-100 text-green-800 border-green-200",
-    Guest: "bg-gray-100 text-gray-800 border-gray-200"
+    Admin: "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-700",
+    Manager: "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-700",
+    User: "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-700",
+    Guest: "bg-gray-100 dark:bg-gray-800/50 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-600"
   };
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${variants[role] || variants.Guest}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border transition-colors duration-300 ${variants[role] || variants.Guest}`}>
       {role}
     </span>
   );

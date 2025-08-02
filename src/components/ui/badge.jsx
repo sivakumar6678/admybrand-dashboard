@@ -1,19 +1,18 @@
-import React from "react";
 import { cn } from "../../utils/cn";
 
 export function Badge({ children, className = "", variant = "default", ...props }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset",
+        "inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-semibold tracking-wide border-2 shadow-sm backdrop-blur-sm transition-all duration-300 hover:shadow-md hover:scale-105",
         variant === "default"
-          ? "bg-primary/10 text-primary ring-primary/20"
+          ? "bg-primary/15 text-primary border-primary/30 hover:bg-primary/20"
           : variant === "secondary"
-          ? "bg-muted text-muted-foreground ring-border"
+          ? "bg-muted/80 text-muted-foreground border-border hover:bg-muted"
           : variant === "outline"
-          ? "bg-transparent text-foreground ring-border"
+          ? "bg-transparent text-foreground border-border hover:bg-muted/50"
           : variant === "destructive"
-          ? "bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-200 ring-red-500/20 dark:ring-red-400/30"
+          ? "bg-red-100/80 text-red-900 dark:bg-red-900/40 dark:text-red-200 border-red-500/30 dark:border-red-400/40 hover:bg-red-100 dark:hover:bg-red-900/50"
           : "",
         className
       )}
