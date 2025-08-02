@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+
 import { 
   Tooltip,
   TooltipContent,
@@ -39,19 +41,20 @@ const AlertIcon = ({ type, className }) => {
 };
 
 const getSeverityColor = (severity) => {
-  switch (severity) {
-    case 'critical':
-      return 'bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/20';
-    case 'high':
-      return 'bg-orange-500/10 text-orange-700 dark:text-orange-300 border-orange-500/20';
-    case 'medium':
-      return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-300 border-yellow-500/20';
-    case 'low':
-      return 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20';
-    default:
-      return 'bg-gray-500/10 text-gray-700 dark:text-gray-300 border-gray-500/20';
-  }
+    switch (severity) {
+        case 'critical':
+            return 'bg-red-100 text-red-900 border-red-500/20'; // Light mode
+        case 'high':
+            return 'bg-orange-100 text-orange-900 border-orange-500/20'; // Light mode
+        case 'medium':
+            return 'bg-yellow-100 text-yellow-900 border-yellow-500/20'; // Light mode
+        case 'low':
+            return 'bg-blue-100 text-blue-900 border-blue-500/20'; // Light mode
+        default:
+            return 'bg-gray-100 text-gray-900 border-gray-500/20'; // Light mode
+    }
 };
+
 
 const AlertItem = ({ alert, onDismiss, index }) => {
   const getAlertVariant = (type) => {
@@ -133,6 +136,7 @@ const AIAlertSystem = ({ data, className }) => {
     clearDismissedAlerts,
     refreshAlerts,
     hasAlerts,
+    hasHighPriorityAlerts,
     alertCount
   } = useAIAlerts(data, true);
 
@@ -156,11 +160,11 @@ const AIAlertSystem = ({ data, className }) => {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between p-3 rounded-lg bg-green-500/10 border border-green-500/20"
+          className="flex items-center justify-between p-3 rounded-lg bg-green-100 dark:bg-green-900/30 border border-green-500/20 dark:border-green-400/30"
         >
           <div className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-            <span className="text-sm font-medium text-green-700 dark:text-green-300">
+            <span className="text-sm font-medium text-green-900 dark:text-green-200">
               All systems running smoothly
             </span>
           </div>
@@ -250,21 +254,22 @@ const AIAlertSystem = ({ data, className }) => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
+      )}
 
-        <div className="space-y-2">
-          <AnimatePresence>
-            {alerts.map((alert, index) => (
-              <AlertItem
-                key={alert.id}
-                alert={alert}
-                onDismiss={dismissAlert}
-                index={index}
-              />
-            ))}
-          </AnimatePresence>
-        </div>
+      <div className="space-y-2">
+        <AnimatePresence>
+          {alerts.map((alert, index) => (
+            <AlertItem
+              key={alert.id}
+              alert={alert}
+              onDismiss={dismissAlert}
+              index={index}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
 
       {/* Loading State */}
       {isLoading && alerts.length === 0 && (
