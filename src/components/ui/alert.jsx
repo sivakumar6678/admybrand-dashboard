@@ -10,13 +10,13 @@ const alertVariants = cva(
       variant: {
         default: "bg-background text-foreground",
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+          "border-red-500/50 text-red-900 dark:text-red-100 bg-red-50 dark:bg-red-950/30 [&>svg]:text-red-600 dark:[&>svg]:text-red-400 [&>*]:text-red-900 dark:[&>*]:text-red-100",
         warning:
-          "border-yellow-500/50 text-yellow-900 dark:text-yellow-100 bg-yellow-50 dark:bg-yellow-950/20 [&>svg]:text-yellow-600 dark:[&>svg]:text-yellow-400",
+          "border-yellow-500/50 text-yellow-900 dark:text-yellow-100 bg-yellow-50 dark:bg-yellow-950/30 [&>svg]:text-yellow-600 dark:[&>svg]:text-yellow-400 [&>*]:text-yellow-900 dark:[&>*]:text-yellow-100",
         success:
-          "border-green-500/50 text-green-900 dark:text-green-100 bg-green-50 dark:bg-green-950/20 [&>svg]:text-green-600 dark:[&>svg]:text-green-400",
+          "border-green-500/50 text-green-900 dark:text-green-100 bg-green-50 dark:bg-green-950/30 [&>svg]:text-green-600 dark:[&>svg]:text-green-400 [&>*]:text-green-900 dark:[&>*]:text-green-100",
         info:
-          "border-blue-500/50 text-blue-900 dark:text-blue-100 bg-blue-50 dark:bg-blue-950/20 [&>svg]:text-blue-600 dark:[&>svg]:text-blue-400",
+          "border-blue-500/50 text-blue-900 dark:text-blue-100 bg-blue-50 dark:bg-blue-950/30 [&>svg]:text-blue-600 dark:[&>svg]:text-blue-400 [&>*]:text-blue-900 dark:[&>*]:text-blue-100",
       },
     },
     defaultVariants: {
@@ -38,7 +38,7 @@ Alert.displayName = "Alert"
 const AlertTitle = React.forwardRef(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={cn("mb-1 font-medium leading-none tracking-tight text-inherit", className)}
     {...props}
   />
 ))
@@ -47,7 +47,7 @@ AlertTitle.displayName = "AlertTitle"
 const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    className={cn("text-sm [&_p]:leading-relaxed text-inherit", className)}
     {...props}
   />
 ))

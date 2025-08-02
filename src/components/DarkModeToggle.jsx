@@ -19,11 +19,11 @@ export function DarkModeToggle() {
   const getThemeIcon = () => {
     switch (theme) {
       case 'light':
-        return <Sun className="h-4 w-4 text-amber-500" />
+        return <Sun className="h-4 w-4 text-amber-500 dark:text-amber-400" />
       case 'dark':
-        return <Moon className="h-4 w-4 text-blue-400" />
+        return <Moon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
       default:
-        return <Monitor className="h-4 w-4 text-gray-500" />
+        return <Monitor className="h-4 w-4 text-gray-500 dark:text-gray-400" />
     }
   }
 
@@ -87,10 +87,10 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('light')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'light' ? 'bg-amber-50 text-amber-700' : ''
+            theme === 'light' ? 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300' : ''
           }`}
         >
-          <Sun className="h-4 w-4 text-amber-500" />
+          <Sun className="h-4 w-4 text-amber-500 dark:text-amber-400" />
           <div className="flex flex-col">
             <span className="font-medium">Light</span>
             <span className="text-xs text-muted-foreground">Bright theme</span>
@@ -100,10 +100,10 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('dark')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'dark' ? 'bg-blue-50 text-blue-700' : ''
+            theme === 'dark' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' : ''
           }`}
         >
-          <Moon className="h-4 w-4 text-blue-400" />
+          <Moon className="h-4 w-4 text-blue-500 dark:text-blue-400" />
           <div className="flex flex-col">
             <span className="font-medium">Dark</span>
             <span className="text-xs text-muted-foreground">Dark theme</span>
@@ -115,10 +115,10 @@ export function DarkModeToggle() {
         <DropdownMenuItem
           onClick={() => handleThemeChange('system')}
           className={`flex items-center gap-3 p-3 rounded-md transition-all duration-200 ${
-            theme === 'system' ? 'bg-gray-50 text-gray-700' : ''
+            theme === 'system' ? 'bg-gray-50 text-gray-700 dark:bg-gray-900/20 dark:text-gray-300' : ''
           }`}
         >
-          <Monitor className="h-4 w-4 text-gray-500" />
+          <Monitor className="h-4 w-4 text-gray-500 dark:text-gray-400" />
           <div className="flex flex-col">
             <span className="font-medium">System</span>
             <span className="text-xs text-muted-foreground">Auto detect</span>

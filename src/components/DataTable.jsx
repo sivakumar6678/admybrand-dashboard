@@ -299,7 +299,7 @@ export default function DataTable({ data, loading = false }) {
                     />
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 h-12"
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 h-12"
                     onClick={() => handleSort('email')}
                   >
                     <div className="flex items-center gap-2">
@@ -317,7 +317,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 h-12"
                     onClick={() => handleSort('role')}
                   >
                     <div className="flex items-center gap-2">
@@ -326,7 +326,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 h-12"
                     onClick={() => handleSort('status')}
                   >
                     <div className="flex items-center gap-2">
@@ -335,7 +335,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 h-12"
                     onClick={() => handleSort('lastLogin')}
                   >
                     <div className="flex items-center gap-2">
@@ -344,7 +344,7 @@ export default function DataTable({ data, loading = false }) {
                     </div>
                   </TableHead>
                   <TableHead
-                    className="cursor-pointer hover:bg-gray-50 hover:text-black dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 text-right h-12"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors duration-200 text-right h-12"
                     onClick={() => handleSort('revenue')}
                   >
                     <div className="flex items-center justify-end gap-2">
@@ -362,7 +362,7 @@ export default function DataTable({ data, loading = false }) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="hover:bg-gray-50  dark:hover:bg-muted/20 dark:hover:text-white transition-colors duration-200 h-12 min-h-[3rem] border-b border-gray-200 dark:border-gray-700"
+                    className="hover:bg-muted/50 transition-colors duration-200 h-12 min-h-[3rem] border-b"
                   >
                     <TableCell className="h-12 py-3">
                       <Checkbox

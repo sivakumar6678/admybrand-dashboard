@@ -12,6 +12,8 @@ export function Badge({ children, className = "", variant = "default", ...props 
           ? "bg-muted text-muted-foreground ring-border"
           : variant === "outline"
           ? "bg-transparent text-foreground ring-border"
+          : variant === "destructive"
+          ? "bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-200 ring-red-500/20 dark:ring-red-400/30"
           : "",
         className
       )}
